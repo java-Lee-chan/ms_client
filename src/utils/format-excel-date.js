@@ -6,10 +6,10 @@ export default function formatDate(numb, format) {
       let year = time.getFullYear() + ''
       let month = time.getMonth() + 1 + ''
       let date = time.getDate() + ''
-      if (format && format.length === 1) {
-          return year + format + month + format + date
-      }
-      return year + (month < 10 ? '0' + month : month) + (date < 10 ? '0' + date : date)
+    //   if (format && format.length === 1) {
+    //       return year + format + month + format + date
+    //   }
+      return year + format +  (month < 10 ? '0' + month : month) + format + (date < 10 ? '0' + date : date)
   } else {
       return undefined;
   }

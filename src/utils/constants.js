@@ -1,5 +1,5 @@
 export const measureConstants = {
-  num: '计量编号',
+  _id: '计量编号',
   name: '器具名称',
   model: '规格型号',
   factory_num: '出厂编号',
