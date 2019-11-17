@@ -1,68 +1,33 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 项目功能
 
-## Available Scripts
+## 测量仪器模块
 
-In the project directory, you can run:
+### 主界面
 
-### `yarn start`
+1. 测量仪器整体的表格展示
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+2. 根据器具名称、计量编号、有效期至进行筛选的功能
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+3. 导出成excel文件的功能
 
-### `yarn test`
+4. 添加、编辑、查看界面的跳转功能
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+5. 批量确认，选择多个测量仪器批量确认，指定本次检定的时间
 
-### `yarn build`
+### 文件上传界面
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. 下载模板文件的功能
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+2. 选择文件后显示上传的内容
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. 检查上传内容的_id是否重复
 
-### `yarn eject`
+4. 上传到后台
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 添加-编辑-查看界面
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. 根据检定日期和周期确认有效期至的功能
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+2. 检查_id是否重复的功能
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+3. 添加-编辑的功能

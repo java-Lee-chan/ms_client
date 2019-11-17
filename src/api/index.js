@@ -1,5 +1,7 @@
 import ajax from './ajax';
 
+import downloadExcel from './download-excel';
+
 const BASE = '';
 
 export const reqLogin = (username, password) => ajax(BASE + '/login', {username, password}, 'POST');
@@ -16,4 +18,4 @@ export const reqUploadMeasures = (measures) => ajax(BASE + '/manage/measure/uplo
 
 export const reqConfrimMeasures = (measures) => ajax(BASE + '/manage/measure/confirm', {measures}, 'POST');
 
-export const reqDownloadMeasureTemplate = () => ajax(BASE + '/manage/measure/downloadMeasureTemaplate');
+export const reqDownloadMeasureTemplate = () => downloadExcel(BASE + '/manage/measure/downloadMeasureTemaplate');

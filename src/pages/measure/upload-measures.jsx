@@ -11,7 +11,7 @@ import {
 
 import {reqUploadMeasures, reqDownloadMeasureTemplate} from '../../api';
 
-import XlsxToJSON from '../../utils/xlsx-to-json';
+import xlsxUtils from '../../utils/xlsxUtils';
 import formatDate from '../../utils/format-excel-date';
 import {measureConstants} from '../../utils/constants';
 import LinkButton from '../../components/link-button/link-button';
@@ -22,6 +22,7 @@ export default class MeasureUpload extends Component {
     dataSource: []
   }
 
+  // 初始化表格结构
   initColumns = () => {
     this.columns = [
       {
@@ -99,10 +100,10 @@ export default class MeasureUpload extends Component {
     // }
   }
 
+  // 处理上传
   handleUpload = async () => {
     const {dataSource} = this.state;
 
-    // 需要检查格式
     const result = await reqUploadMeasures(dataSource);
     if(result.status === 0){
       message.success('上传测量仪器成功', 1);
@@ -113,41 +114,55 @@ export default class MeasureUpload extends Component {
     }
   }
 
+  // 处理取消上传
   handleCancel = () => {
     this.setState({dataSource: []});
   }
 
-  handleDownload = async() => {
-    const result = await reqDownloadMeasureTemplate();
-    if(result.status === 0){
-      message.success('模板下载成功，请按模板格式上传', 1);
-    }else {
-      message.error(result.msg, 1);
-    }
-  }
-
+  // 文件读取后处理文件内容
   handleChange = (e) => {
-    XlsxToJSON(e.target.files[0], (json) => {
-      console.log(json);
+    xlsxUtils.readWorkbookFromLocalFile(e.target.files[0], (json) => {
+      // console.log(json);
       const measures = json.reduce((pre, item) => {
         let measure = {};
         Object.keys(measureConstants).forEach(key => {
           if(key === 'last_time' || key === 'next_time'){
-            measure[key] = formatDate(item[measureConstants[key]], '/');
-          }else if(key === 'duration'){
-            measure[key] = parseInt(item[measureConstants[key]]).toString();
-          }else {
+            if(key === 'next_time' && item['检定周期'] === '长期'){
+              measure[key] = '-';
+            }else {
+              measure[key] = formatDate(item[measureConstants[key]], '/');
+            }
+          }
+          // else if(key === 'duration'){
+            // measure[key] = parseInt(item[measureConstants[key]]).toString();
+          // }
+          else {
             measure[key] = item[measureConstants[key]];
           }
         })
         pre.push(measure);
         return pre;
       }, []);
-      this.setState({dataSource:measures});
+      this.setState({dataSource: measures});
     });
   }
 
-  componentWillMount() {
+  // 处理模板下载
+  handleExport = async () => {
+    const result = await reqDownloadMeasureTemplate();
+    let blob = new Blob([result], {type: 'application/vnd.ms-excel;charset=utf8'});
+
+    const downloadElement = document.createElement('a');
+    const href = window.URL.createObjectURL(blob);
+    downloadElement.href= href;
+    downloadElement.download = `测量仪器模板.xlsx`;
+    // document.body.appendChild(downloadElement);
+    downloadElement.click();
+    // document.removeChild(downloadElement);
+    window.URL.revokeObjectURL(downloadElement, href);
+  }
+  
+  UNSAFE_componentWillMount() {
     this.initColumns();
   }
 
@@ -175,8 +190,8 @@ export default class MeasureUpload extends Component {
                 rowKey='_id'
                 dataSource={dataSource}
                 columns={this.columns}
-                // pagination={{defaultPageSize: 5, showQuickJumper: true}}
-                // rowSelection={this.rowSelection}
+                size="small"
+                pagination={{hideOnSinglePage: true}}
               />
               <Button type='primary' onClick={this.handleUpload}>确认无误，点击上传</Button>&nbsp;&nbsp;
               <Button type='primary' onClick={this.handleCancel}>撤销</Button>
@@ -184,7 +199,7 @@ export default class MeasureUpload extends Component {
           ):(
             <>
               <span>请根据模板文件的格式进行上传</span>
-              <LinkButton onClick={this.handleDownload}>下载模板</LinkButton><br/>
+              <LinkButton onClick={this.handleExport}>下载模板</LinkButton><br/>
               <Input type="file" onChange={this.handleChange} style={{width: 500}}/>
             </>
           )

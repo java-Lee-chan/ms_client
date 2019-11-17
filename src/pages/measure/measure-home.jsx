@@ -10,19 +10,25 @@ import {
   Select,
   message,
   Form,
-  DatePicker
+  DatePicker,
+  ConfigProvider
 } from 'antd';
+
+import zhCN from 'antd/es/locale/zh_CN';
 
 import moment from 'moment';
 import LinkButton from '../../components/link-button/link-button'
 import {reqGetMeasures, reqConfrimMeasures} from '../../api';
 import MemoryUtils from '../../utils/memoryUtils';
+import xlsxUtils from '../../utils/xlsxUtils.js';
+import {measureConstants} from '../../utils/constants';
 
 import './measure-home.less';
 
 const InputGroup = Input.Group;
 const {Option} = Select;
 const Item = Form.Item;
+const {RangePicker} = DatePicker;
 
 export default class MeasureHome extends Component {
 
@@ -37,6 +43,7 @@ export default class MeasureHome extends Component {
     confirmTime: moment()
   }
 
+  // 初始化表格结构
   initColumns = () => {
     this.columns = [
       {
@@ -97,8 +104,17 @@ export default class MeasureHome extends Component {
           {
             text: 'INP',
             value: 'INP'
+          },
+          {
+            text: '保全系',
+            value: '保全系'
+          },
+          {
+            text: '品质系',
+            value: '品质系'
           }
-        ]
+        ],
+        onFilter: (value, record) => record.location.indexOf(value) === 0,
       },
       // {
       //   title: '用途',
@@ -119,8 +135,17 @@ export default class MeasureHome extends Component {
           {
             text: '在库',
             value: '在库',
-          }
-        ]
+          },
+          {
+            text: '维修',
+            value: '维修',
+          },
+          {
+            text: '新增',
+            value: '新增',
+          },
+        ],
+        onFilter: (value, record) => (record.status ? record.status.indexOf(value) === 0: false),
       },
       {
         title: '操作',
@@ -136,6 +161,7 @@ export default class MeasureHome extends Component {
     ];
   }
 
+  // 获取所有测量仪器
   getMeasures = async() => {
     const result = await reqGetMeasures();
     if(result.status === 0){
@@ -146,15 +172,18 @@ export default class MeasureHome extends Component {
     }
   }
 
+  // 显示编辑界面
   showUpdate = (measure) => {
     MemoryUtils.measure = measure;
     this.props.history.push('/measure/addupdate');
   }
 
+  // 显示查看界面
   showDetail = (measure) => {
     this.props.history.push({pathname: '/measure/addupdate', state: {measure}});
   }
 
+  // 处理文字搜索
   handleSearch = (event) => {
     const searchText = event.target.value.trim();
     // this.setState({searchText});
@@ -163,26 +192,34 @@ export default class MeasureHome extends Component {
     this.setState({searchMeasures});
   }
 
-  selectRow = (record) => {
-    // const selectedRows = [...this.state.selectedRows];
-    // const selectedRowKeys = [...this.state.selectedRowKeys];
-    // if (selectedRows.indexOf(record) >= 0) {
-    //   selectedRows.splice(selectedRows.indexOf(record), 1);
-    //   selectedRowKeys.splice(selectedRowKeys.indexOf(record.key), 1);
-    // } else {
-    //   selectedRows.push(record);
-    //   selectedRowKeys.push(record.key);
-    // }
-    // this.setState({ selectedRows, selectedRowKeys });
-    const selectedRowKeys = [...this.state.selectedRowKeys];
-    if (selectedRowKeys.indexOf(record.key) >= 0) {
-      selectedRowKeys.splice(selectedRowKeys.indexOf(record.key), 1);
-    } else {
-      selectedRowKeys.push(record.key);
+  // 处理日期范围搜索
+  handleRangeChange = (date, dateString) => {
+    // console.log(date,dateString);
+    const {measures} = this.state;
+    if(date.length > 0){
+      const searchMeasures = measures.filter(measure => (measure.next_time < dateString[1] && measure.next_time > dateString[0]));
+      this.setState({searchMeasures});
+    }else {
+      this.setState({searchMeasures: measures});
     }
-    this.setState({ selectedRowKeys });
   }
 
+  // 处理导出
+  handleExport = () => {
+    const {searchMeasures} = this.state;
+    const measures = searchMeasures.reduce((pre, item, index) => {
+      let measure = {};
+      measure['序号'] = index + 1;
+      Object.keys(measureConstants).forEach(key => {
+        measure[measureConstants[key]] = item[key];
+      });
+      pre.push(measure);
+      return pre;
+    }, []);
+    xlsxUtils.exportWorkbookFromServerFile(measures);
+  }
+
+  // 批量确认
   handleOk = async() => {
     const {selectedRows, confirmTime} = this.state;
     let flag = true;
@@ -210,8 +247,8 @@ export default class MeasureHome extends Component {
       message.error('请确认选择的计量仪器周期是否相同');
     }
   }
- 
-  componentWillMount() {
+
+  UNSAFE_componentWillMount() {
     this.initColumns();
   }
 
@@ -220,13 +257,22 @@ export default class MeasureHome extends Component {
   }
 
   render() {
-    const {searchMeasures, isShowConfirm, confirmTime, selectedRows, selectedRowKeys} = this.state;
+    const {searchMeasures, isShowConfirm, confirmTime, selectedRows, selectedRowKeys, searchOption} = this.state;
 
     const rowSelection = {
       selectedRowKeys,
       onChange: (selectedRowKeys, selectedRows) => {
+        console.log(selectedRows);
         this.setState({selectedRowKeys, selectedRows});
       }
+    };
+
+    const pagination = {
+      size: 'small', 
+      total: searchMeasures.length, 
+      showSizeChanger: true,
+      pageSizeOptions: ['5', '10', '20', '30', '50', '100'], 
+      showQuickJumper: true
     };
     
     const title = (
@@ -234,20 +280,26 @@ export default class MeasureHome extends Component {
         <Select defaultValue="name" onChange={searchOption => this.setState({searchOption})}>
           <Option value="name">器具名称</Option>
           <Option value="_id">计量编号</Option>
+          <Option value="next_time">有效期至</Option>
         </Select>
-        <Input 
-          style={{ width: 200 }}
-          placeholder="输入搜索内容"
-          onChange={this.handleSearch}/>
+        {searchOption === 'next_time'? (
+          <RangePicker onChange={this.handleRangeChange} format='YYYY/MM/DD'/>
+        ):(
+          <Input 
+            style={{ width: 200 }}
+            placeholder="输入搜索内容"
+            onChange={this.handleSearch}/>
+        )}
       </InputGroup>
     );
+
     const extra = (
       <span>
         <Button type='primary' onClick={() => {this.props.history.push('/measure/upload')}}>
           <Icon type='upload'/>
           <span>上传</span>
         </Button>
-        <Button type='primary' style={{marginLeft: 10}}>
+        <Button type='primary' style={{marginLeft: 10}} onClick={this.handleExport}>
           <Icon type='download'/>
           <span>导出</span>
         </Button>
@@ -269,34 +321,33 @@ export default class MeasureHome extends Component {
         </Button>
       </span>
     );
+
     return (
-      <Card title={title} extra={extra}>
-        <Table
-          bordered
-          rowKey='_id'
-          dataSource={searchMeasures}
-          columns={this.columns}
-          pagination={{defaultPageSize: 5, showQuickJumper: true}}
-          rowSelection={rowSelection}
-          // onRow={(record) => ({
-          //   onClick: () => {
-          //     this.selectRow(record);
-          //   },
-          // })}
-        />
-        <Modal
-          title='批量确认'
-          visible={isShowConfirm}
-          onOk={this.handleOk}
-          onCancel={() => {
-            this.setState({isShowConfirm: false});
-          }}
-        >
-          <Item label="选择检定日期">
-            <DatePicker value={confirmTime} onChange={(date) => this.setState({confirmTime: date})}/>
-          </Item>
-        </Modal>
-      </Card>
+      <ConfigProvider locale={zhCN}>
+        <Card title={title} extra={extra}>
+          <Table
+            bordered
+            rowKey='_id'
+            dataSource={searchMeasures}
+            columns={this.columns}
+            pagination={pagination}
+            rowSelection={rowSelection}
+            size="small"
+          />
+          <Modal
+            title='批量确认'
+            visible={isShowConfirm}
+            onOk={this.handleOk}
+            onCancel={() => {
+              this.setState({isShowConfirm: false});
+            }}
+          >
+            <Item label="选择检定日期">
+              <DatePicker value={confirmTime} onChange={(date) => this.setState({confirmTime: date})}/>
+            </Item>
+          </Modal>
+        </Card>
+      </ConfigProvider>
     )
   }
 }
