@@ -9,7 +9,8 @@ import {
   Icon
 } from 'antd';
 
-import {reqUploadMeasures, reqDownloadMeasureTemplate} from '../../api';
+import {reqUploadMeasures} from '../../api';
+import downloadTemplate from '../../utils/downloadTemplate';
 
 import xlsxUtils from '../../utils/xlsxUtils';
 import formatDate from '../../utils/format-excel-date';
@@ -25,6 +26,10 @@ export default class MeasureUpload extends Component {
   // 初始化表格结构
   initColumns = () => {
     this.columns = [
+      { 
+        title: '序号',
+        dataIndex: 'index',
+      },
       {
         title: '计量编号',
         dataIndex: '_id',
@@ -130,7 +135,13 @@ export default class MeasureUpload extends Component {
             if(key === 'next_time' && item['检定周期'] === '长期'){
               measure[key] = '-';
             }else {
-              measure[key] = formatDate(item[measureConstants[key]], '/');
+              if(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/.test(item[measureConstants[key]])){
+                measure[key] = item[measureConstants[key]];
+              }
+              if(typeof(item[measureConstants[key]]) === 'number'){
+                // console.log(item[measureConstants[key]]);
+                measure[key] = formatDate(item[measureConstants[key]], '/');
+              }
             }
           }
           // else if(key === 'duration'){
@@ -139,7 +150,7 @@ export default class MeasureUpload extends Component {
           else {
             measure[key] = item[measureConstants[key]];
           }
-        })
+        });
         pre.push(measure);
         return pre;
       }, []);
@@ -148,18 +159,8 @@ export default class MeasureUpload extends Component {
   }
 
   // 处理模板下载
-  handleExport = async () => {
-    const result = await reqDownloadMeasureTemplate();
-    let blob = new Blob([result], {type: 'application/vnd.ms-excel;charset=utf8'});
-
-    const downloadElement = document.createElement('a');
-    const href = window.URL.createObjectURL(blob);
-    downloadElement.href= href;
-    downloadElement.download = `测量仪器模板.xlsx`;
-    // document.body.appendChild(downloadElement);
-    downloadElement.click();
-    // document.removeChild(downloadElement);
-    window.URL.revokeObjectURL(downloadElement, href);
+  handleExport = () => {
+    downloadTemplate('measure');
   }
   
   UNSAFE_componentWillMount() {
@@ -191,7 +192,7 @@ export default class MeasureUpload extends Component {
                 dataSource={dataSource}
                 columns={this.columns}
                 size="small"
-                pagination={{hideOnSinglePage: true}}
+                pagination={{hideOnSinglePage: true, defaultPageSize: 500}}
               />
               <Button type='primary' onClick={this.handleUpload}>确认无误，点击上传</Button>&nbsp;&nbsp;
               <Button type='primary' onClick={this.handleCancel}>撤销</Button>

@@ -11,6 +11,7 @@ import LeftNav from '../../components/left-nav/left-nav';
 
 import Measure from '../measure/measure';
 import SparePart from '../spare-part/spare-part';
+import Home from '../home/home';
 import Gas from '../gas/gas';
 import Elec from '../elec/elec';
 import Water from '../water/water';
@@ -42,6 +43,7 @@ class Admin extends Component {
           <Content style={{margin: 15, backgroundColor: 'white'}}>
             <Switch>
               <Redirect from='/' to='/home' exact/>
+              <Route path='/home' component={Home}/>
               <Route path='/measure' component={Measure}/>
               <Route path='/spare-part' component={SparePart}/>
               <Route path='/energy/gas' component={Gas}/>

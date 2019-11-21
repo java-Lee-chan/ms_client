@@ -33,6 +33,11 @@ const menuList = [
         title: '科室用水',
         key:'/energy/water',
         icon: 'pie-chart'
+      },
+      {
+        title: '配置',
+        key:'/energy/settings',
+        icon: 'pie-chart'
       }
     ]
   },

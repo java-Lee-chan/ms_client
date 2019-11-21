@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-export default function downloadExcel(url){
+export default function downloadExcel(url, data){
   return new Promise((resolve, reject) => {
     const promise = axios.get(url, {
       Accept: 'application/octet-stream',
-      responseType: 'blob'
+      responseType: 'blob',
+      params: data
     });
     promise.then(response => {
       if(!response) return

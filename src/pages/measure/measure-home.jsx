@@ -35,8 +35,8 @@ export default class MeasureHome extends Component {
   state = {
     measures: [],
     searchMeasures: [],
-    selectedRowKeys: [],
     selectedRows: [],
+    selectedRowKeys: [],
     searchOption: 'name',   // 根据什么搜索
     searchText: '',         // 搜索关键字
     isShowConfirm: false,   // 是否显示批量确认框
@@ -47,9 +47,12 @@ export default class MeasureHome extends Component {
   initColumns = () => {
     this.columns = [
       {
+        title: '序号',
+        render: (text, record, index) => (`${index + 1}`)
+      },
+      {
         title: '计量编号',
         dataIndex: '_id',
-        className: 'column'
       },
       {
         title: '器具名称',
@@ -153,7 +156,6 @@ export default class MeasureHome extends Component {
         render: (measure) => (
           <span>
             <LinkButton onClick={() => {this.showUpdate(measure)}}>编辑</LinkButton>
-            {/* <LinkButton>确认</LinkButton> */}
             <LinkButton onClick={() => {this.showDetail(measure)}}>查看</LinkButton>
           </span>
         )
@@ -209,42 +211,49 @@ export default class MeasureHome extends Component {
     const {searchMeasures} = this.state;
     const measures = searchMeasures.reduce((pre, item, index) => {
       let measure = {};
-      measure['序号'] = index + 1;
       Object.keys(measureConstants).forEach(key => {
         measure[measureConstants[key]] = item[key];
       });
+      measure['序号'] = index + 1;
       pre.push(measure);
       return pre;
     }, []);
-    xlsxUtils.exportWorkbookFromServerFile(measures);
+    xlsxUtils.exportWorkbookFromServerFile(measures, 'measure');
   }
 
   // 批量确认
   handleOk = async() => {
     const {selectedRows, confirmTime} = this.state;
     let flag = true;
-    let duration = '-';
+    let duration = '';
     selectedRows.forEach(selectedRow => {
-      if(duration === '-'){
+      if(selectedRow.duration === '长期'){
+        flag = false;
+        return;
+      }else if(duration === ''){
         duration = selectedRow.duration;
       }else if(duration !== selectedRow.duration){
         flag = false;
+        return;
       }
-      selectedRow.last_time = confirmTime.format('YYYY/MM/DD');
-      selectedRow.next_time = moment(selectedRow.last_time, 'YYYY/MM/DD').add(parseInt(selectedRow.duration), 'M').subtract(1, 'd').format('YYYY/MM/DD');
-      selectedRow.result = '合格';
     });
+    duration = '';
     if(flag){
       // console.log(selectedRows);
+      selectedRows.forEach(selectedRow => {
+        selectedRow.last_time = confirmTime.format('YYYY/MM/DD');
+        selectedRow.next_time = moment(selectedRow.last_time, 'YYYY/MM/DD').add(parseInt(selectedRow.duration), 'M').subtract(1, 'd').format('YYYY/MM/DD');
+        selectedRow.result = '合格';
+      });
       const result = await reqConfrimMeasures(selectedRows);
       if(result.status === 0){
-        this.setState({isShowConfirm: false});
+        this.setState({isShowConfirm: false, selectedRowKeys: [], selectedRows: []});
         this.getMeasures();
       }else {
         message.error(result.msg, 1);
       }
     }else {
-      message.error('请确认选择的计量仪器周期是否相同');
+      message.error('请确认选择的计量仪器是否有周期或周期是否相同');
     }
   }
 
@@ -260,12 +269,34 @@ export default class MeasureHome extends Component {
     const {searchMeasures, isShowConfirm, confirmTime, selectedRows, selectedRowKeys, searchOption} = this.state;
 
     const rowSelection = {
-      selectedRowKeys,
+      selectedRowKeys: selectedRowKeys,
       onChange: (selectedRowKeys, selectedRows) => {
-        console.log(selectedRows);
+        // console.log(selectedRows);
         this.setState({selectedRowKeys, selectedRows});
       }
     };
+
+    const onRow = record => ({
+      onClick: () => {
+        let val = record['_id'];
+        let rowKeys = [];
+        let rows = [];
+        selectedRowKeys.forEach(x => { rowKeys.push(x); });
+        selectedRows.forEach(x => { rows.push(x); });
+        let idx = rowKeys.indexOf(val);
+        // console.log(idx);
+        if (idx === -1) { 
+          rowKeys.push(val); 
+          rows.push(record);
+        } else { 
+          rowKeys.splice(idx, 1);
+          rows.splice(idx, 1);
+        }
+        // console.log(rowKeys);
+        this.setState({selectedRowKeys: rowKeys, selectedRows: rows});
+      }
+    });
+      
 
     const pagination = {
       size: 'small', 
@@ -313,7 +344,7 @@ export default class MeasureHome extends Component {
             if(selectedRows.length > 0){
               this.setState({isShowConfirm: true});
             }else {
-              message.error('却选中至少一个测量仪器');
+              message.error('请选中至少一个测量仪器');
             }
           }}>
           <Icon type='plus'/>
@@ -332,7 +363,8 @@ export default class MeasureHome extends Component {
             columns={this.columns}
             pagination={pagination}
             rowSelection={rowSelection}
-            size="small"
+            onRow={onRow}
+            size='small'
           />
           <Modal
             title='批量确认'

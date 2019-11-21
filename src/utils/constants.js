@@ -1,4 +1,5 @@
 export const measureConstants = {
+  index: '序号',
   _id: '计量编号',
   name: '器具名称',
   model: '规格型号',
@@ -13,4 +14,19 @@ export const measureConstants = {
   usage: '用途',
   type: '送检类型',
   status: '状态'
+}
+
+export const sparePartConstants = {
+  index: '序号',
+  name: '备件名称',
+  model: '型号',
+  specs: '规格',
+  brand: '品牌',
+  price: '单价',
+  num: '数量',
+  unit: '单位',
+  total: '总价',
+  usage: '用途',
+  time: '提交日期',
+  committer: '提交人',
 }

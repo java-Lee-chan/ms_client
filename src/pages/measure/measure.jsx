@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Switch, Route, Redirect} from 'react-router-dom';
 import MeasureHome from './measure-home';
 import MeasureAddUpdateAndDetail from './add-update-detail';
-import MeasureUpload from './upload-measures';
+import MeasureUpload from './measure-upload';
 
 export default class Measure extends Component {
   render() {
