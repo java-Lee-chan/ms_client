@@ -103,8 +103,8 @@ class SparePartHome extends Component {
   getSpareParts = async (timeRange) => {
     const start = timeRange[0].format('YYYY/MM/DD');
     const end = timeRange[1].format('YYYY/MM/DD');
-    const commiter = this.props.user.name;
-    const result = await reqGetSpareParts(start, end, commiter);
+    const committer = this.props.user.username;
+    const result = await reqGetSpareParts(start, end, committer);
     if(result.status === 0){
       const spareParts = result.data;
       this.setState({spareParts});
@@ -185,7 +185,7 @@ class SparePartHome extends Component {
           <span>导出</span>
         </Button>
         {
-          (user.username === 'admin') || (user.role.menus.indexOf('getAllSpareParts') !== -1) ? (
+          (user.username === 'admin') || (user.role.menus.indexOf('spare-part-all-pass') !== -1) ? (
             <Button 
               type='primary' 
               style={{marginLeft: 10}} 

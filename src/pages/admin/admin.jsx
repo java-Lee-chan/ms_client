@@ -12,9 +12,12 @@ import LeftNav from '../../components/left-nav/left-nav';
 import Measure from '../measure/measure';
 import SparePart from '../spare-part/spare-part';
 import Home from '../home/home';
-import Gas from '../gas/gas';
-import Elec from '../elec/elec';
-import Water from '../water/water';
+// import Gas from '../gas/gas';
+// import Elec from '../elec/elec';
+// import Water from '../water/water';
+import BaseData from '../energy-base-data/base-data';
+import Report from '../energy-report/report';
+import EnergySettings from '../energy-settings/energy-settings';
 import User from '../user/user';
 import Role from '../role/role';
 
@@ -35,20 +38,30 @@ class Admin extends Component {
 
     return (
       <Layout style={{minHeight: '100%'}}>
-        <Sider width={150}>
+        <Sider 
+          width={200} 
+          style={{
+            overflow: 'auto',
+            height: '100vh',
+            position: 'fixed',
+            left: 0,
+          }}>
           <LeftNav/>
         </Sider>
-        <Layout>
+        <Layout style={{marginLeft: 200}}>
           <Header/>
-          <Content style={{margin: 15, backgroundColor: 'white'}}>
+          <Content style={{margin: 15}}>
             <Switch>
               <Redirect from='/' to='/home' exact/>
               <Route path='/home' component={Home}/>
               <Route path='/measure' component={Measure}/>
               <Route path='/spare-part' component={SparePart}/>
-              <Route path='/energy/gas' component={Gas}/>
+              {/* <Route path='/energy/gas' component={Gas}/>
               <Route path='/energy/elec' component={Elec}/>
-              <Route path='/energy/water' component={Water}/>
+              <Route path='/energy/water' component={Water}/> */}
+              <Route path='/energy/base-data' component={BaseData}/>
+              <Route path='/energy/report' component={Report}/>
+              <Route path='/energy/settings' component={EnergySettings}/>
               <Route path='/user' component={User}/>
               <Route path='/role' component={Role}/>
             </Switch>

@@ -1,0 +1,39 @@
+.home-container {
+  // position: relative;
+  min-height: 100%;
+  display: flex;
+  .home-left {
+    padding: 10px 0 10px 10px;
+    flex: 1 1 auto; 
+    .home-left-top {
+      height: 33.3%;
+      flex: 1
+    }
+    .home-left-center {
+      height: 33.3%;
+      flex: 1
+    }
+    .home-left-bottom {
+      height: 33.3%;
+      flex: 1
+    }
+  }
+  .home-right {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    .home-right-top {
+      padding: 10px;
+      height: 50%;
+      flex: 1;
+      .ant-table-footer{
+        padding: 10px;
+      }
+    }
+    .home-right-bottom {
+      padding: 10px;
+      height: 50%;
+      flex: 1
+    }
+  }
+}

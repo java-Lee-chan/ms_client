@@ -10,6 +10,8 @@ export const reqAddMeasure = (measure) => ajax(BASE + '/manage/measure/add', mea
 
 export const reqGetMeasures = () => ajax(BASE + '/manage/measure/list');
 
+export const reqGetRecentMeasures = () => ajax(BASE + '/manage/measure/recent/list');
+
 export const reqUpdateMeasure = (measure) => ajax(BASE + '/manage/measure/update', measure, 'POST');
 
 export const reqCheckId = (_id) => ajax(BASE + '/manage/measure/checkid', {_id}, 'POST');
@@ -20,7 +22,7 @@ export const reqConfrimMeasures = (measures) => ajax(BASE + '/manage/measure/con
 
 export const reqDownloadTemplate = (type) => downloadExcel(BASE + '/manage/downloadTemplate', {type});
 
-export const reqGetSpareParts = (start, end, commiter) => ajax(BASE + '/manage/spare-part/list', {start, end, commiter});
+export const reqGetSpareParts = (start, end, committer) => ajax(BASE + '/manage/spare-part/list', {start, end, committer});
 
 export const reqAddSparePart = (sparePart) => ajax(BASE + '/manage/spare-part/add', sparePart, 'POST');
 
@@ -29,6 +31,8 @@ export const reqUpdateSparePart= (sparePart) => ajax(BASE + '/manage/spare-part/
 export const reqUploadSpareParts = (spareParts) => ajax(BASE + '/manage/spare-part/upload', {spareParts}, 'POST');
 
 export const reqConfirmSpareParts = (spareParts) => ajax(BASE + '/manage/spare-part/confirm', {spareParts}, 'POST');
+
+export const reqSparePartTime = () => ajax(BASE + '/manage/spare-part/recent/list');
 
 export const reqAddRole = (roleName) => ajax(BASE + '/manage/role/add', {roleName}, 'POST');
 
@@ -41,3 +45,11 @@ export const reqGetUsers = () => ajax(BASE + '/manage/user/list');
 export const reqAddOrUpdate = (user) => ajax(BASE + `/manage/user/${user._id? 'update':'add'}`, user, 'POST');
 
 export const reqDeleteUser = (userId) => ajax(BASE + '/manage/user/delete', {userId}, 'POST');
+
+export const reqGetMeterLevel = () => ajax(BASE + '/manage/meter-level/list');
+
+export const reqAddMeterLevel = (meter) => ajax(BASE + '/manage/meter-level/add', meter, 'POST');
+
+export const reqUpdateMeterLevel = (meter) => ajax(BASE + '/manage/meter-level/update', meter, 'POST');
+
+export const reqDeleteMeterLevel = (_id) => ajax(BASE + '/manage/meter-level/delete', {_id}, 'POST');

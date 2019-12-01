@@ -8,12 +8,14 @@ import {
   Modal
 } from 'antd';
 
+import {connect} from 'react-redux';
+import {logout} from '../../redux/actions';
 import {reqGetUsers, reqAddOrUpdate, reqDeleteUser} from '../../api';
 import {formatDate} from '../../utils/dateUtils';
 import LinkButton from '../../components/link-button/link-button';
 import UserForm from './user-form';
 
-export default class User extends Component {
+class User extends Component {
   state = {
     users: [],
     roles: [],
@@ -85,8 +87,13 @@ export default class User extends Component {
       onOk: async () => {
         const result = await reqDeleteUser(user._id);
         if(result.status === 0){
-          message.success('删除用户成功', 1);
-          this.getUsers();
+          if(user._id === this.props.user._id){
+            message.success('当前用户被删除请重新登录', 1);
+            this.props.logout();
+          }else {
+            message.success('删除用户成功', 1);
+            this.getUsers();
+          }
         }else {
           message.error(result.msg, 1);
         }
@@ -118,11 +125,16 @@ export default class User extends Component {
         const result = await reqAddOrUpdate(user);
         if(result.status === 0){
           // 3. 更新列表显示
-          message.success(`${this.user?'修改':'添加'}用户成功`, 1);
-          this.getUsers();
-          this.setState({
-            isShow: false
-          });
+          if(this.user && this.user._id && this.user._id === this.props.user._id){
+            message.success(`修改当前用户的信息后需重新登录`, 1);
+            this.props.logout();
+          }else {
+            message.success(`${this.user?'修改':'添加'}用户成功`, 1);
+            this.getUsers();
+            this.setState({
+              isShow: false
+            });
+          }
         }else {
           message.error(result.msg, 1);
         }
@@ -172,3 +184,8 @@ export default class User extends Component {
     )
   }
 }
+
+export default connect(
+  state => ({user: state.user}),
+  {logout}
+)(User);

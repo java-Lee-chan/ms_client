@@ -16,6 +16,7 @@ class AddForm extends Component {
   UNSAFE_componentWillMount() {
     this.props.setForm(this.props.form);
   }
+  
   render() {
     const {getFieldDecorator} = this.props.form;
 

@@ -20,22 +20,17 @@ const menuList = [
     icon: 'appstore',
     children: [
       {
-        title: '科室用气',
-        key:'/energy/gas',
+        title: '基础数据',
+        key:'/energy/base-data',
         icon: 'bar-chart'
       },
       {
-        title: '科室用电',
-        key:'/energy/elec',
+        title: '报表中心',
+        key:'/energy/report',
         icon: 'line-chart'
       },
       {
-        title: '科室用水',
-        key:'/energy/water',
-        icon: 'pie-chart'
-      },
-      {
-        title: '配置',
+        title: '管理配置',
         key:'/energy/settings',
         icon: 'pie-chart'
       }
