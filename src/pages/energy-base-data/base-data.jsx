@@ -14,6 +14,7 @@ import moment from 'moment';
 
 import ReactEcharts from 'echarts-for-react';
 import {reqGetMeterLevel} from '../../api';
+import { translateDataToTree } from '../../utils/translateDataToTree';
 
 import './base-data.less';
 
@@ -27,6 +28,7 @@ const {RangePicker} = DatePicker;
 export default class BaseData extends Component {
 
   state = {
+    rawMeterLevels: [],
     meterLevels: [],
     expandedRowKeys: [],
     dateList: [],
@@ -34,6 +36,7 @@ export default class BaseData extends Component {
     duration: 'day',
     type: 'line',
     searchValue: '',
+    meter_id: ''
   }
 
   initColumns = () => {
@@ -52,38 +55,23 @@ export default class BaseData extends Component {
   getMeterLevel = async() => {
     const result = await reqGetMeterLevel();
     if(result.status === 0){
-      // console.log(result.data);
-      const meterLevels = this.translateDataToTree(result.data);
-      console.log(meterLevels);
-      this.setState({meterLevels});
+      const rawMeterLevels = result.data;
+      const meterLevels = translateDataToTree(rawMeterLevels);
+      const meter_id = meterLevels[0]._id;
+      const expandedRowKeys = result.data.map(item => {
+        return item._id;
+      });
+      this.setState({
+        rawMeterLevels, meterLevels, meter_id, expandedRowKeys
+      });
     }else {
       message.error(result.msg, 1);
     }
   }
 
-  translateDataToTree = (data) => {
-    let parents = data.filter(value => value.father_id === undefined || value.father_id === null);
-    let children = data.filter(value => value.father_id !== undefined && value.father_id !== null);
-    let translator = (parents, children) => {
-      parents.forEach(parent => {
-        children.forEach((current, index) => {
-          if(current.father_id === parent._id){
-            let temp = JSON.parse(JSON.stringify(children));
-            temp.splice(index, 1);
-            translator([current], temp);
-            typeof parent.children !== 'undefined' ? parent.children.push(current): parent.children = [current]
-          }
-        })
-      })
-    }
-
-    translator(parents, children);
-
-    return parents;
-  }
-
-
-  getLineOptions = (dateList, valueList) => {
+  getLineOptions = (dateList, valueList, meter_id) => {
+    const meter = this.state.rawMeterLevels.filter(item => item._id === meter_id)[0];
+    const text = meter ? `${meter.name}-${meter.type}今日用量` : '今日用量';
     return {
       // Make gradient line here
       visualMap: [{
@@ -93,7 +81,7 @@ export default class BaseData extends Component {
       }],
       title: [{
         left: 'center',
-        text: '今日用量'
+        text
       }],
       tooltip: {
         trigger: 'axis'
@@ -115,11 +103,13 @@ export default class BaseData extends Component {
     };
   }
 
-  getBarOptions = (dateList, valueList) => {
+  getBarOptions = (dateList, valueList, meter_id) => {
+    const meter = this.state.rawMeterLevels.filter(item => item._id === meter_id)[0];
+    const text = meter ? `${meter.name}-${meter.type}今日用量` : '今日用量';
     return {
       title: [{
         left: 'center',
-        text: '今日用量'
+        text
       }],
       xAxis: {
         type: 'category',
@@ -138,14 +128,14 @@ export default class BaseData extends Component {
   onChange = (event, type) => {
     const value = event.target.value;
     this.setState({[type]: value});
-  }
+  } 
 
   UNSAFE_componentWillMount() {
     this.initColumns();
   }
 
   componentDidMount() {
-    const data = [["2000-06-05",116],["2000-06-06",129],["2000-06-07",135],["2000-06-08",86],["2000-06-09",73],["2000-06-10",85],["2000-06-11",73],["2000-06-12",68],["2000-06-13",92],["2000-06-14",130],["2000-06-15",245],["2000-06-16",139],["2000-06-17",115],["2000-06-18",111],["2000-06-19",309],["2000-06-20",206],["2000-06-21",137],["2000-06-22",128],["2000-06-23",85],["2000-06-24",94],["2000-06-25",71],["2000-06-26",106],["2000-06-27",84],["2000-06-28",93],["2000-06-29",85],["2000-06-30",73],["2000-07-01",83],["2000-07-02",125],["2000-07-03",107],["2000-07-04",82],["2000-07-05",44],["2000-07-06",72],["2000-07-07",106],["2000-07-08",107],["2000-07-09",66],["2000-07-10",91],["2000-07-11",92],["2000-07-12",113],["2000-07-13",107],["2000-07-14",131],["2000-07-15",111],["2000-07-16",64],["2000-07-17",69],["2000-07-18",88],["2000-07-19",77],["2000-07-20",83],["2000-07-21",111],["2000-07-22",57],["2000-07-23",55],["2000-07-24",60]];
+    const data = [["0:00",116],["1:00",129],["2:00",135],["3:00",86],["4:00",73],["5:00",85],["6:00",73],["7:00",68],["8:00",92],["9:00",130],["10:00",245],["11:00",139],["12:00",115],["13:00",111],["14:00",309],["15:00",206],["16:00",137],["17:00",128],["18:00",85],["19:00",94],["20:00",71],["21:00",106],["22:00",84],["23:00",93],["24:00",85]];
     const dateList = data.map(function (item) {
       return item[0];
     });
@@ -158,7 +148,7 @@ export default class BaseData extends Component {
 
   render() {
 
-    const {meterLevels, dateList, valueList, type, expandedRowKeys} = this.state;
+    const {meterLevels, dateList, valueList, type, meter_id, expandedRowKeys} = this.state;
 
     return(
       <Layout className="base-data-container">
@@ -176,6 +166,16 @@ export default class BaseData extends Component {
             columns={this.columns}
             dataSource={meterLevels}
             pagination={false}
+            onRow={record => {
+                return {
+                  onClick: event => {
+                    this.setState({
+                      meter_id: record._id
+                    })
+                  }, // 点击行
+                };
+              }
+            }
             expandedRowKeys={expandedRowKeys}
           />
         </Sider>
@@ -187,7 +187,7 @@ export default class BaseData extends Component {
               <Radio.Button value='year'>年</Radio.Button>
             </Radio.Group>
             <RangePicker
-              defaultValue={[moment('2015/01/01', 'YYYY/MM/DD'), moment('2015/01/01', 'YYYY/MM/DD')]}
+              defaultValue={[moment(moment(), 'YYYY/MM/DD'), moment(moment(), 'YYYY/MM/DD')]}
               format='YYYY/MM/DD'
               className="base-data-right-header-date"
             />
@@ -203,9 +203,9 @@ export default class BaseData extends Component {
           <Content className="base-data-right-content">
             {
               type === 'line'? (
-                <ReactEcharts option={this.getLineOptions(dateList, valueList)} className="base-data-right-content-chart"></ReactEcharts>
+                <ReactEcharts option={this.getLineOptions(dateList, valueList, meter_id)} className="base-data-right-content-chart"></ReactEcharts>
               ): (
-                <ReactEcharts option={this.getBarOptions(dateList, valueList)} className="base-data-right-content-chart"></ReactEcharts>
+                <ReactEcharts option={this.getBarOptions(dateList, valueList, meter_id)} className="base-data-right-content-chart"></ReactEcharts>
               )
             }
           </Content>

@@ -11,6 +11,7 @@ import {
 
 import {reqGetMeterLevel, reqAddMeterLevel, reqUpdateMeterLevel, reqDeleteMeterLevel} from '../../api';
 import LinkButton from '../../components/link-button/link-button';
+import { translateDataToTree } from '../../utils/translateDataToTree';
 
 import MeterForm from './add-update';
 
@@ -90,12 +91,16 @@ export default class Settings extends Component {
   getMeterLevel = async() => {
     const result = await reqGetMeterLevel();
     if(result.status === 0){
-      const meterLevels = result.data.reduce((pre, meterLevel) => {
-        if (Object.keys(pre).indexOf(meterLevel.type) === -1){
-          pre[meterLevel.type] = [meterLevel];
-        }else {
-          pre[meterLevel.type].push(meterLevel);
-        }
+      // const meterLevels = result.data.reduce((pre, meterLevel) => {
+      //   if (Object.keys(pre).indexOf(meterLevel.type) === -1){
+      //     pre[meterLevel.type] = [meterLevel];
+      //   }else {
+      //     pre[meterLevel.type].push(meterLevel);
+      //   }
+      //   return pre;
+      // }, {});
+      const meterLevels = translateDataToTree(result.data).reduce((pre, item) => {
+        pre[item.type] = [item];
         return pre;
       }, {});
       const expandedRowKeys = result.data.reduce((pre, meterLevel) => {
@@ -106,53 +111,47 @@ export default class Settings extends Component {
         }
         return pre;
       }, {});
-      /* 
-      得到的meterLevels结构是这样的：
-      {
-        gas: [],
-        water: [],
-        elec: []
-      }
-      但每个类型对应数组中是每一个表，没有按照父子关系重组
-      */
-      this.setState({meterLevels, expandedRowKeys});
-      // 将每个类型对应数组按照父子关系重组
-      this.getTypeMeterList();
+      this.setState({
+        meterLevels, 
+        expandedRowKeys
+      });
+
+      // this.getTypeMeterList();
     }else {
       message.error(result.msg, 1);
     }
   }
 
-  // 根据表类型筛选出该界面的表层级
-  getTypeMeterList = () => {
-    const {meterLevels} = this.state;
-    const newMeterLevels = {};
-    Object.keys(meterLevels).forEach(key => {
-      const index = meterLevels[key].findIndex(meterLevel => meterLevel.parent_id === undefined);
-      let meterList = meterLevels[key].splice(index, 1);
-      meterLevels[key].forEach(meterLevel => {
-        meterList = this.setMeterList(meterList, meterLevel);
-      });
-      newMeterLevels[key] = meterList;
-    })
-    this.setState({meterLevels: newMeterLevels});
-  }
+  // // 根据表类型筛选出该界面的表层级
+  // getTypeMeterList = () => {
+  //   const {meterLevels} = this.state;
+  //   const newMeterLevels = {};
+  //   Object.keys(meterLevels).forEach(key => {
+  //     const index = meterLevels[key].findIndex(meterLevel => meterLevel.parent_id === undefined);
+  //     let meterList = meterLevels[key].splice(index, 1);
+  //     meterLevels[key].forEach(meterLevel => {
+  //       meterList = this.setMeterList(meterList, meterLevel);
+  //     });
+  //     newMeterLevels[key] = meterList;
+  //   })
+  //   this.setState({meterLevels: newMeterLevels});
+  // }
 
-  setMeterList = (meterList, meterLevel) => {
-    return meterList.reduce((pre, meter) => {
-      if(meter._id === meterLevel.father_id){
-        if(meter.children){
-          meter.children.push(meterLevel);
-        }else {
-          meter.children = [meterLevel];
-        }
-      }else if(meter.children){
-        this.setMeterList(meter.children, meterLevel);
-      }
-      pre.push(meter);
-      return pre;
-    }, []);
-  }
+  // setMeterList = (meterList, meterLevel) => {
+  //   return meterList.reduce((pre, meter) => {
+  //     if(meter._id === meterLevel.father_id){
+  //       if(meter.children){
+  //         meter.children.push(meterLevel);
+  //       }else {
+  //         meter.children = [meterLevel];
+  //       }
+  //     }else if(meter.children){
+  //       this.setMeterList(meter.children, meterLevel);
+  //     }
+  //     pre.push(meter);
+  //     return pre;
+  //   }, []);
+  // }
 
   handleMethod = (record, method) => {
     this.setState({isShow: true});
@@ -312,7 +311,11 @@ export default class Settings extends Component {
 
   render() {
 
-    const {meterLevels, isShow, expandedRowKeys} = this.state;
+    const {
+      meterLevels, 
+      isShow, 
+      expandedRowKeys
+    } = this.state;
     const typeMeterLevels = meterLevels[this.type];
     const typeExpandedRowKeys = expandedRowKeys[this.type];
     const {meterLevel, method} = this;

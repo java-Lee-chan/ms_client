@@ -67,24 +67,24 @@ const authList = [
       },
     ]
   },
-  // {
-  //   title: '能源管理',
-  //   key: 'energy',
-  //   children: [
-  //     {
-  //       title: '查看界面',
-  //       key: 'energy-into'
-  //     },
-  //     {
-  //       title: '导出数据',
-  //       key: 'energy-download'
-  //     },
-  //     {
-  //       title: '管理配置',
-  //       key: 'energy-settings'
-  //     }
-  //   ]
-  // },
+  {
+    title: '能源管理',
+    key: 'energy',
+    children: [
+      {
+        title: '查看界面',
+        key: 'energy-into'
+      },
+      {
+        title: '导出数据',
+        key: 'energy-download'
+      },
+      {
+        title: '管理配置',
+        key: 'energy-settings'
+      }
+    ]
+  },
   {
     title: '用户管理',
     key: 'user',
