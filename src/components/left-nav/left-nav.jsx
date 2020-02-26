@@ -16,7 +16,8 @@ const { SubMenu } = Menu;
 class LeftNav extends Component {
 
   static propTypes = {
-    setHeadTitle: PropTypes.func.isRequired
+    setHeadTitle: PropTypes.func.isRequired,
+    collapsed: PropTypes.bool.isRequired
   }
 
   getMenuNodes = (menuList) => {
@@ -63,16 +64,27 @@ class LeftNav extends Component {
 
   render() {
     let path = this.props.location.pathname;
-    if(path.indexOf('/measure') === 0){
-      path = '/measure';
+    // if(path.indexOf('/measure') === 0){
+    //   path = '/measure';
+    // }
+    if(path.indexOf('/energy/settings') === 0){
+      path = '/energy/settings';
     }
     const openKey = this.openKey;
 
     return (
       <div className="left-nav">
         <Link to="/" className="left-nav-header">
-          <img src={logo} alt="logo"/>
-          <h1>后台管理系统</h1>
+          {
+            this.props.collapsed ? <img src={logo} className="collapsedLogo" alt="logo"/> : 
+            (
+              <>
+                <img src={logo} className="uncollapsedLogo" alt="logo"/>
+                <h1>后台管理系统</h1>
+              </>
+            )
+          }
+          
         </Link>
         <Menu
           selectedKeys={[path]}

@@ -7,7 +7,9 @@ import {
   Icon,
   Button,
   InputNumber,
-  message
+  message,
+  Row,
+  Col
 } from 'antd';
 
 import {connect} from 'react-redux';
@@ -112,109 +114,141 @@ class SparePartAddUpdate extends Component {
     );
 
     const formItemLayout = {
-      labelCol: { span: 2 },
-      wrapperCol: { span: 8 }
+      labelCol: { span: 4 },
+      wrapperCol: { span: 16 }
     }
 
     return (
       <Card title={title}>
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-          <Item label='备件名称'>
-            {
-              getFieldDecorator('name', {
-                initialValue: isUpdate? sparePart.name: '',
-                rules: [
-                  {required: true, message: '请输入备件名称'},
-                ]
-              })(
-                <Input/>
-              )
-            }
-          </Item>
-          <Item label='型号'>
-            {
-              getFieldDecorator('model', {
-                initialValue: isUpdate? sparePart.model: '',
-                rules: [
-                  {required: true, message: '请输入备件型号'},
-                ]
-              })(
-                <Input/>
-              )
-            }
-          </Item>
-          <Item label='规格'>
-            {
-              getFieldDecorator('specs', {
-                initialValue: isUpdate? sparePart.specs: '',
-              })(
-                <Input/>
-              )
-            }
-          </Item>
-          <Item label='品牌'>
-            {
-              getFieldDecorator('brand', {
-                initialValue: isUpdate? sparePart.brand: '',
-              })(
-                <Input/>
-              )
-            }
-          </Item>
-          <Item label='单价'>
-            {
-              getFieldDecorator('price', {
-                initialValue: isUpdate? sparePart.price: 0,
-                rules: [
-                  {required: true, message: '请输入备件单价'},
-                ]
-              })(
-                <InputNumber min={0} onChange={(value) => {this.handleChange(value, 'price')}}/>
-              )
-            }
-          </Item>
-          <Item label='数量'>
-            {
-              getFieldDecorator('num', {
-                initialValue: isUpdate? sparePart.num: 0,
-                rules: [
-                  {required: true, message: '请输入采购数量'},
-                ]
-              })(
-                <InputNumber min={0} onChange={(value) => {this.handleChange(value, 'num')}}/>
-              )
-            }
-          </Item>
-          <Item label='单位'>
-            {
-              getFieldDecorator('unit', {
-                initialValue: isUpdate? sparePart.unit: '',
-              })(
-                <Input/>
-              )
-            }
-          </Item>
-          <Item label='总价'>
-            {
-              getFieldDecorator('total', {
-                initialValue: isUpdate? sparePart.total: 0,
-              })(
-                <InputNumber disabled/>
-              )
-            }
-          </Item>
-          <Item label='用途'>
-            {
-              getFieldDecorator('usage', {
-                initialValue: isUpdate? sparePart.usage: '',
-              })(
-                <Input/>
-              )
-            }
-          </Item>
-          <Item>
-            <Button type='primary' htmlType='submit'>提交</Button>
-          </Item>
+          <Row>
+            <Col span={12}>
+              <Item label='备件名称'>
+                {
+                  getFieldDecorator('name', {
+                    initialValue: isUpdate? sparePart.name: '',
+                    rules: [
+                      {required: true, message: '请输入备件名称'},
+                    ]
+                  })(
+                    <Input/>
+                  )
+                }
+              </Item>
+            </Col>
+            <Col span={12}>
+              <Item label='型号'>
+                {
+                  getFieldDecorator('model', {
+                    initialValue: isUpdate? sparePart.model: '',
+                    rules: [
+                      {required: true, message: '请输入备件型号'},
+                    ]
+                  })(
+                    <Input/>
+                  )
+                }
+              </Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              <Item label='规格'>
+                {
+                  getFieldDecorator('specs', {
+                    initialValue: isUpdate? sparePart.specs: '',
+                  })(
+                    <Input/>
+                  )
+                }
+              </Item>
+            </Col>
+            <Col span={12}>
+              <Item label='品牌'>
+                {
+                  getFieldDecorator('brand', {
+                    initialValue: isUpdate? sparePart.brand: '',
+                  })(
+                    <Input/>
+                  )
+                }
+              </Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              <Item label='单价'>
+                {
+                  getFieldDecorator('price', {
+                    initialValue: isUpdate? sparePart.price: 0,
+                    rules: [
+                      {required: true, message: '请输入备件单价'},
+                    ]
+                  })(
+                    <InputNumber min={0} onChange={(value) => {this.handleChange(value, 'price')}}/>
+                  )
+                }
+              </Item>
+            </Col>
+            <Col span={12}>
+              <Item label='数量'>
+                {
+                  getFieldDecorator('num', {
+                    initialValue: isUpdate? sparePart.num: 0,
+                    rules: [
+                      {required: true, message: '请输入采购数量'},
+                    ]
+                  })(
+                    <InputNumber min={0} onChange={(value) => {this.handleChange(value, 'num')}}/>
+                  )
+                }
+              </Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              <Item label='单位'>
+                {
+                  getFieldDecorator('unit', {
+                    initialValue: isUpdate? sparePart.unit: '',
+                  })(
+                    <Input/>
+                  )
+                }
+              </Item>
+            </Col>
+            <Col span={12}>
+              <Item label='总价'>
+                {
+                  getFieldDecorator('total', {
+                    initialValue: isUpdate? sparePart.total: 0,
+                  })(
+                    <InputNumber disabled/>
+                  )
+                }
+              </Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              <Item label='用途'>
+                {
+                  getFieldDecorator('usage', {
+                    initialValue: isUpdate? sparePart.usage: '',
+                  })(
+                    <Input/>
+                  )
+                }
+              </Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col offset={20}>
+              <Item>
+                <Button type='primary' htmlType='submit'>提交</Button>
+              </Item>
+            </Col>
+          </Row>
         </Form>
       </Card>
     )

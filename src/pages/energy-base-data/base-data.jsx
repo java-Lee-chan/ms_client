@@ -52,55 +52,37 @@ export default class BaseData extends Component {
   getMeterLevel = async() => {
     const result = await reqGetMeterLevel();
     if(result.status === 0){
-      console.log(result.data);
-      // const meterLevels = result.data.reduce((pre, meterLevel) => {
-      //   if (Object.keys(pre).indexOf(meterLevel.type) === -1){
-      //     pre[meterLevel.type] = [meterLevel];
-      //   }else {
-      //     pre[meterLevel.type].push(meterLevel);
-      //   }
-      //   return pre;
-      // }, {});
-      // const expandedRowKeys = result.data.reduce((pre, meterLevel) => {
-      //   if (Object.keys(pre).indexOf(meterLevel.type) === -1){
-      //     pre[meterLevel.type] = [meterLevel._id];
-      //   }else {
-      //     pre[meterLevel.type].push(meterLevel._id);
-      //   }
-      //   return pre;
-      // }, {});
-      /* 
-      得到的meterLevels结构是这样的：
-      {
-        gas: [],
-        water: [],
-        elec: []
-      }
-      但每个类型对应数组中是每一个表，没有按照父子关系重组
-      */
-      // console.log(meterLevels, expandedRowKeys);
-      // this.setState({meterLevels, expandedRowKeys});
-      // 将每个类型对应数组按照父子关系重组
-      // this.getTypeMeterList();
+      // console.log(result.data);
+      const meterLevels = this.translateDataToTree(result.data);
+      console.log(meterLevels);
+      this.setState({meterLevels});
     }else {
       message.error(result.msg, 1);
     }
   }
-    // 根据表类型筛选出该界面的表层级
-    // getTypeMeterList = () => {
-    //   const {meterLevels} = this.state;
-    //   const newMeterLevels = {};
-    //   Object.keys(meterLevels).forEach(key => {
-    //     const index = meterLevels[key].findIndex(meterLevel => meterLevel.parent_id === undefined);
-    //     let meterList = meterLevels[key].splice(index, 1);
-    //     meterLevels[key].forEach(meterLevel => {
-    //       meterList = this.setMeterList(meterList, meterLevel);
-    //     });
-    //     newMeterLevels[key] = meterList;
-    //   })
-    //   this.setState({meterLevels: newMeterLevels});
-    // }
-  
+
+  translateDataToTree = (data) => {
+    let parents = data.filter(value => value.father_id === undefined || value.father_id === null);
+    let children = data.filter(value => value.father_id !== undefined && value.father_id !== null);
+    let translator = (parents, children) => {
+      parents.forEach(parent => {
+        children.forEach((current, index) => {
+          if(current.father_id === parent._id){
+            let temp = JSON.parse(JSON.stringify(children));
+            temp.splice(index, 1);
+            translator([current], temp);
+            typeof parent.children !== 'undefined' ? parent.children.push(current): parent.children = [current]
+          }
+        })
+      })
+    }
+
+    translator(parents, children);
+
+    return parents;
+  }
+
+
   getLineOptions = (dateList, valueList) => {
     return {
       // Make gradient line here

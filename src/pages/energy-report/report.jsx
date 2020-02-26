@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {
-  Card,
-  Table,
-  Button,
+  Card
 } from 'antd';
 
 export default class Report extends Component {
@@ -37,6 +35,7 @@ export default class Report extends Component {
         tabList={this.tabList}
         activeTabKey={this.state.key}
         onTabChange={key => this.onTabChange(key, 'type')}
+        style={{minHeight: '100%'}}
       >
 
       </Card>

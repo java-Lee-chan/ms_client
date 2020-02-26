@@ -14,28 +14,28 @@ const menuList = [
     key: '/spare-part',
     icon: 'appstore',
   },
-  {
-    title: '能源管理',
-    key: '/energy',
-    icon: 'appstore',
-    children: [
-      {
-        title: '基础数据',
-        key:'/energy/base-data',
-        icon: 'bar-chart'
-      },
-      {
-        title: '报表中心',
-        key:'/energy/report',
-        icon: 'line-chart'
-      },
-      {
-        title: '管理配置',
-        key:'/energy/settings',
-        icon: 'pie-chart'
-      }
-    ]
-  },
+  // {
+  //   title: '能源管理',
+  //   key: '/energy',
+  //   icon: 'appstore',
+  //   children: [
+  //     {
+  //       title: '基础数据',
+  //       key:'/energy/base-data',
+  //       icon: 'bar-chart'
+  //     },
+  //     {
+  //       title: '报表中心',
+  //       key:'/energy/report',
+  //       icon: 'line-chart'
+  //     },
+  //     {
+  //       title: '管理配置',
+  //       key:'/energy/settings',
+  //       icon: 'pie-chart'
+  //     }
+  //   ]
+  // },
   {
     title: '用户管理',
     key: '/user',

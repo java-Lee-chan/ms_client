@@ -67,17 +67,6 @@ class RoleContent extends Component {
   }
 
   handleChange = async (checkedList, key) => {
-    // if(key === 'measure') {
-    //   this.measureCheckedList = checkedList;
-    // }else if(key === 'spare-part') {
-    //   this.sparePartCheckedList = checkedList;
-    // }else if(key === 'user') {
-    //   this.userCheckedList = checkedList;
-    // }else if(key === 'role') {
-    //   this.roleCheckedList = checkedList;
-    // }
-
-    // this.setState({menus: [...this.measureCheckedList || [], ...this.sparePartCheckedList || [], ...this.userCheckedList || [], ...this.roleCheckedList || []]});
     this.setState(state => {
       const newMenus = state.menus.filter(menu => menu.indexOf(key) !== 0);
       return {
@@ -106,10 +95,6 @@ class RoleContent extends Component {
       message.error(result.msg, 1);
     }
   }
-
-  // UNSAFE_componentWillMount() {
-  //   this.cardMenus = this.getCardMenus(authList);
-  // }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({menus: nextProps.role.menus});

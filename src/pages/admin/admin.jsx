@@ -12,9 +12,6 @@ import LeftNav from '../../components/left-nav/left-nav';
 import Measure from '../measure/measure';
 import SparePart from '../spare-part/spare-part';
 import Home from '../home/home';
-// import Gas from '../gas/gas';
-// import Elec from '../elec/elec';
-// import Water from '../water/water';
 import BaseData from '../energy-base-data/base-data';
 import Report from '../energy-report/report';
 import EnergySettings from '../energy-settings/energy-settings';
@@ -25,6 +22,10 @@ const { Footer, Sider, Content } = Layout;
 
 class Admin extends Component {
 
+  state = {
+    collapsed: false
+  }
+
   static propTypes = {
     user: PropTypes.object.isRequired
   }
@@ -32,23 +33,28 @@ class Admin extends Component {
   render() {
 
     const user = this.props.user;
+
     if(!user || !user._id){
       return <Redirect to='/login'/>
     }
 
     return (
       <Layout style={{minHeight: '100%'}}>
-        <Sider 
-          width={200} 
+        <Sider
+          breakpoint="lg"
+          onCollapse={(collapsed, type) => {
+            this.setState({collapsed})
+          }}
           style={{
             overflow: 'auto',
             height: '100vh',
             position: 'fixed',
             left: 0,
           }}>
-          <LeftNav/>
+        >
+          <LeftNav collapsed={this.state.collapsed}/>
         </Sider>
-        <Layout style={{marginLeft: 200}}>
+        <Layout style={{marginLeft: this.state.collapsed ? 80 : 200}}>
           <Header/>
           <Content style={{margin: 15}}>
             <Switch>
@@ -56,9 +62,6 @@ class Admin extends Component {
               <Route path='/home' component={Home}/>
               <Route path='/measure' component={Measure}/>
               <Route path='/spare-part' component={SparePart}/>
-              {/* <Route path='/energy/gas' component={Gas}/>
-              <Route path='/energy/elec' component={Elec}/>
-              <Route path='/energy/water' component={Water}/> */}
               <Route path='/energy/base-data' component={BaseData}/>
               <Route path='/energy/report' component={Report}/>
               <Route path='/energy/settings' component={EnergySettings}/>

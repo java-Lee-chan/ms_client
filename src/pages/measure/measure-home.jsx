@@ -46,10 +46,10 @@ export default class MeasureHome extends Component {
   // 初始化表格结构
   initColumns = () => {
     this.columns = [
-      {
-        title: '序号',
-        render: (text, record, index) => (`${index + 1}`)
-      },
+      // {
+      //   title: '序号',
+      //   render: (text, record, index) => (`${index + 1}`)
+      // },
       {
         title: '计量编号',
         dataIndex: '_id',
@@ -58,18 +58,6 @@ export default class MeasureHome extends Component {
         title: '器具名称',
         dataIndex: 'name',
       },
-      // {
-      //   title: '规格型号',
-      //   dataIndex: 'model'
-      // },
-      // {
-      //   title: '出厂编号',
-      //   dataIndex: 'factory_num'
-      // },
-      // {
-      //   title: '制造商',
-      //   dataIndex: 'manufacturer'
-      // },
       {
         title: '检定时间',
         dataIndex: 'last_time'
@@ -84,10 +72,6 @@ export default class MeasureHome extends Component {
         title: '检定周期',
         dataIndex: 'duration'
       },
-      // {
-      //   title: 'ABC管理',
-      //   dataIndex: 'abc'
-      // },
       {
         title: '检定结果',
         dataIndex: 'result'
@@ -119,14 +103,6 @@ export default class MeasureHome extends Component {
         ],
         onFilter: (value, record) => record.location.indexOf(value) === 0,
       },
-      // {
-      //   title: '用途',
-      //   dataIndex: 'usage'
-      // },
-      // {
-      //   title: '送检类型',
-      //   dataIndex: 'type'
-      // },
       {
         title: '状态',
         dataIndex: 'status',

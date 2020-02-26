@@ -9,7 +9,9 @@ import {
   DatePicker,
   Select,
   message,
-  ConfigProvider
+  ConfigProvider,
+  Row,
+  Col
 } from 'antd';
 
 import zhCN from 'antd/es/locale/zh_CN';
@@ -133,8 +135,8 @@ class MeasureAddUpdateAndDetail extends Component{
     const next_time_placeholder = (isUpdate && measure.duration === '长期') || (isDetail && measureDetail.duration === '长期') || this.props.form.getFieldValue('duration') === '长期' ?'-' : '请选择日期';
     
     const formItemLayout = {
-      labelCol: { span: 2 },
-      wrapperCol: { span: 8 }
+      labelCol: { span: 4 },
+      wrapperCol: { span: 16 }
     };
 
     const title = (
@@ -159,177 +161,223 @@ class MeasureAddUpdateAndDetail extends Component{
             {...formItemLayout}
             onSubmit={this.handleSubmit}
           >
-            <Item label='计量编号:'>
-              {
-                getFieldDecorator("_id", {
-                  initialValue: isUpdate? measure._id: (isDetail? measureDetail._id: ''),
-                  rules: [
-                    {required: true, message: '请输入计量编号'},
-                    {validator: this.validateId}
-                  ]
-                })(
-                  <Input disabled={isUpdate || isDetail}/>
-                )
-              }
-            </Item>
-            <Item label='器具名称:'>
-              {
-                getFieldDecorator("name", {
-                  initialValue: isUpdate? measure.name: (isDetail? measureDetail.name: ''),
-                  rules: [
-                    {required: true, message: '请输入器具名称'}
-                  ]
-                })(
-                  <Input disabled={isDetail}/>
-                )
-              }
-            </Item>
-            <Item label='规格型号:'>
-              {
-                getFieldDecorator('model', {
-                  initialValue: isUpdate? measure.model: (isDetail? measureDetail.model: ''),
-                })(
-                  <Input disabled={isDetail}/>
-                )
-              }
-            </Item>
-            <Item label='出厂编号:'>
-              {
-                getFieldDecorator('factory_num', {
-                  initialValue: isUpdate? measure.factory_num: (isDetail? measureDetail.factory_num: ''),
-                })(
-                  <Input disabled={isDetail}/>
-                )
-              }
-            </Item>
-            <Item label='制造商:'>
-              {
-                getFieldDecorator('manufacturer', {
-                  initialValue: isUpdate? measure.manufacturer: (isDetail? measureDetail.manufacturer: ''),
-                })(
-                  <Input disabled={isDetail} />
-                )
-              }
-            </Item>
-            <Item label='检定日期:'>
-              {
-                getFieldDecorator('last_time', {
-                  initialValue: isUpdate? moment(measure.last_time, 'YYYY/MM/DD'):  (isDetail? moment(measureDetail.last_time, 'YYYY/MM/DD'): null),
-                  rules: [
-                    {required: true, message: '请选择上次检定时间!' }
-                  ]
-                })(<DatePicker onChange={this.handleLastTimeChange} disabled={isDetail}/>)
-              }
-            </Item>
-            <Item label='检定周期:'>
-              {
-                getFieldDecorator('duration', {
-                  initialValue: isUpdate? measure.duration: (isDetail? measureDetail.duration: ''),
-                })(
-                  <Select onChange={this.handleDurationChange} disabled={isDetail}>
-                    <Option value='3个月'>3个月</Option>
-                    <Option value='6个月'>6个月</Option>
-                    <Option value='12个月'>12个月</Option>
-                    <Option value='长期'>长期</Option>
-                  </Select>
-                )
-              }
-            </Item>
-            <Item label='有效期至:'>
-              {
-                getFieldDecorator('next_time', {
-                  initialValue: next_time_initial,
-                })(<DatePicker disabled placeholder={next_time_placeholder}/>)
-              }
-            </Item>
-            <Item label='ABC管理:'>
-              {
-                getFieldDecorator('abc',{
-                  initialValue: isUpdate? measure.abc: (isDetail? measureDetail.abc: 'A')
-                })(
-                  <Select disabled={isDetail}>
-                    <Option value='A'>A</Option>
-                    <Option value='B'>B</Option>
-                    <Option value='C'>C</Option>
-                  </Select>
-                )
-              }
-            </Item>
-            <Item label='检定结果:'>
-              {
-                getFieldDecorator('result', {
-                  initialValue: isUpdate? measure.result: (isDetail? measureDetail.result: '合格')
-                })(
-                  <Select disabled={isDetail}>
-                    <Option value='合格'>合格</Option>
-                    <Option value='不合格'>不合格</Option>
-                  </Select>
-                )
-              }
-            </Item>
-            <Item label='使用地点:'>
-              {
-                getFieldDecorator('location', {
-                  rules: [
-                    {required: true, message: '请输入使用地点'}
-                  ],
-                  initialValue: isUpdate? measure.location: (isDetail? measureDetail.location: 'INJ')
-                })(
-                  <Select disabled={isDetail}>
-                    <Option value='INJ'>INJ</Option>
-                    <Option value='BPR'>BPR</Option>
-                    <Option value='INP'>INP</Option>
-                    <Option value='保全系'>保全系</Option>
-                    <Option value='品质系'>品质系</Option>
-                  </Select>
-                )
-              }
-            </Item>
-            <Item label='用途:'>
-              {
-                getFieldDecorator('usage', {
-                  initialValue: isUpdate? measure.usage: (isDetail? measureDetail.usage: '')
-                })(
-                  <Input disabled={isDetail}/>
-                )
-              }
-            </Item>
-            <Item label='送检类型:'>
-              {
-                getFieldDecorator('type', {
-                  initialValue: isUpdate? measure.type: (isDetail? measureDetail.type: '校准')
-                })(
-                  <Select disabled={isDetail}>
-                    <Option value='校准'>校准</Option>
-                    <Option value='检定'>检定</Option>
-                    <Option value='送检'>送检</Option>
-                    <Option value='现场检定'>现场检定</Option>
-                    <Option value='自立化检定'>自立化检定</Option>
-                  </Select>
-                )
-              }
-            </Item>
-            <Item label='状态:'>
-              {
-                getFieldDecorator('status', {
-                  initialValue: isUpdate? measure.status: (isDetail? measureDetail.status: '在库')
-                })(
-                  <Select disabled={isDetail}>
-                    <Option value='在库'>在库</Option>
-                    <Option value='送检'>送检</Option>
-                    <Option value='维修'>维修</Option>
-                    <Option value='新增'>新增</Option>
-                  </Select>
-                )
-              }
-            </Item>
-            {
-              isDetail? '': (
-                <Item>
-                  <Button type='primary' htmlType='submit'>提交</Button>
+            <Row>
+              <Col span={12}>
+                <Item label='计量编号:'>
+                  {
+                    getFieldDecorator("_id", {
+                      initialValue: isUpdate? measure._id: (isDetail? measureDetail._id: ''),
+                      rules: [
+                        {required: true, message: '请输入计量编号'},
+                        {validator: this.validateId}
+                      ]
+                    })(
+                      <Input disabled={isUpdate || isDetail}/>
+                    )
+                  }
                 </Item>
-              )
-            }
+              </Col>
+              <Col span={12}>
+                <Item label='器具名称:'>
+                  {
+                    getFieldDecorator("name", {
+                      initialValue: isUpdate? measure.name: (isDetail? measureDetail.name: ''),
+                      rules: [
+                        {required: true, message: '请输入器具名称'}
+                      ]
+                    })(
+                      <Input disabled={isDetail}/>
+                    )
+                  }
+                </Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <Item label='规格型号:'>
+                  {
+                    getFieldDecorator('model', {
+                      initialValue: isUpdate? measure.model: (isDetail? measureDetail.model: ''),
+                    })(
+                      <Input disabled={isDetail}/>
+                    )
+                  }
+                </Item>
+              </Col>
+              <Col span={12}>
+                <Item label='出厂编号:'>
+                  {
+                    getFieldDecorator('factory_num', {
+                      initialValue: isUpdate? measure.factory_num: (isDetail? measureDetail.factory_num: ''),
+                    })(
+                      <Input disabled={isDetail}/>
+                    )
+                  }
+                </Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <Item label='制造商:'>
+                  {
+                    getFieldDecorator('manufacturer', {
+                      initialValue: isUpdate? measure.manufacturer: (isDetail? measureDetail.manufacturer: ''),
+                    })(
+                      <Input disabled={isDetail} />
+                    )
+                  }
+                </Item>
+              </Col>
+              <Col span={12}>
+                <Item label='检定日期:'>
+                  {
+                    getFieldDecorator('last_time', {
+                      initialValue: isUpdate? moment(measure.last_time, 'YYYY/MM/DD'):  (isDetail? moment(measureDetail.last_time, 'YYYY/MM/DD'): null),
+                      rules: [
+                        {required: true, message: '请选择上次检定时间!' }
+                      ]
+                    })(<DatePicker onChange={this.handleLastTimeChange} disabled={isDetail}/>)
+                  }
+                </Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <Item label='检定周期:'>
+                  {
+                    getFieldDecorator('duration', {
+                      initialValue: isUpdate? measure.duration: (isDetail? measureDetail.duration: ''),
+                    })(
+                      <Select onChange={this.handleDurationChange} disabled={isDetail}>
+                        <Option value='3个月'>3个月</Option>
+                        <Option value='6个月'>6个月</Option>
+                        <Option value='12个月'>12个月</Option>
+                        <Option value='长期'>长期</Option>
+                      </Select>
+                    )
+                  }
+                </Item>
+              </Col>
+              <Col span={12}>
+                <Item label='有效期至:'>
+                  {
+                    getFieldDecorator('next_time', {
+                      initialValue: next_time_initial,
+                    })(<DatePicker disabled placeholder={next_time_placeholder}/>)
+                  }
+                </Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <Item label='ABC管理:'>
+                  {
+                    getFieldDecorator('abc',{
+                      initialValue: isUpdate? measure.abc: (isDetail? measureDetail.abc: 'A')
+                    })(
+                      <Select disabled={isDetail}>
+                        <Option value='A'>A</Option>
+                        <Option value='B'>B</Option>
+                        <Option value='C'>C</Option>
+                      </Select>
+                    )
+                  }
+                </Item>
+              </Col>
+              <Col span={12}>
+                <Item label='检定结果:'>
+                  {
+                    getFieldDecorator('result', {
+                      initialValue: isUpdate? measure.result: (isDetail? measureDetail.result: '合格')
+                    })(
+                      <Select disabled={isDetail}>
+                        <Option value='合格'>合格</Option>
+                        <Option value='不合格'>不合格</Option>
+                      </Select>
+                    )
+                  }
+                </Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <Item label='使用地点:'>
+                  {
+                    getFieldDecorator('location', {
+                      rules: [
+                        {required: true, message: '请输入使用地点'}
+                      ],
+                      initialValue: isUpdate? measure.location: (isDetail? measureDetail.location: 'INJ')
+                    })(
+                      <Select disabled={isDetail}>
+                        <Option value='INJ'>INJ</Option>
+                        <Option value='BPR'>BPR</Option>
+                        <Option value='INP'>INP</Option>
+                        <Option value='保全系'>保全系</Option>
+                        <Option value='品质系'>品质系</Option>
+                      </Select>
+                    )
+                  }
+                </Item>
+              </Col>
+              <Col span={12}>
+                <Item label='用途:'>
+                  {
+                    getFieldDecorator('usage', {
+                      initialValue: isUpdate? measure.usage: (isDetail? measureDetail.usage: '')
+                    })(
+                      <Input disabled={isDetail}/>
+                    )
+                  }
+                </Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <Item label='送检类型:'>
+                  {
+                    getFieldDecorator('type', {
+                      initialValue: isUpdate? measure.type: (isDetail? measureDetail.type: '校准')
+                    })(
+                      <Select disabled={isDetail}>
+                        <Option value='校准'>校准</Option>
+                        <Option value='检定'>检定</Option>
+                        <Option value='送检'>送检</Option>
+                        <Option value='现场检定'>现场检定</Option>
+                        <Option value='自立化检定'>自立化检定</Option>
+                      </Select>
+                    )
+                  }
+                </Item>
+              </Col>
+              <Col span={12}>
+                <Item label='状态:'>
+                  {
+                    getFieldDecorator('status', {
+                      initialValue: isUpdate? measure.status: (isDetail? measureDetail.status: '在库')
+                    })(
+                      <Select disabled={isDetail}>
+                        <Option value='在库'>在库</Option>
+                        <Option value='送检'>送检</Option>
+                        <Option value='维修'>维修</Option>
+                        <Option value='新增'>新增</Option>
+                      </Select>
+                    )
+                  }
+                </Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col offset={20}>
+                {
+                isDetail? '': (
+                  <Item>
+                    <Button type='primary' htmlType='submit'>提交</Button>
+                  </Item>
+                )
+              }
+              </Col>
+            </Row>
           </Form>
         </Card>
       </ConfigProvider>

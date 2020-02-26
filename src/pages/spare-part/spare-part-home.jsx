@@ -164,7 +164,7 @@ class SparePartHome extends Component {
   render() {
 
     const {spareParts, timeRange, isShowConfirm, selectedRows, selectedRowKeys} = this.state;
-    const {user} = this.props;
+    // const {user} = this.props;
     // console.log(timeRange);
 
     const title = (
@@ -184,7 +184,7 @@ class SparePartHome extends Component {
           <Icon type='download'/>
           <span>导出</span>
         </Button>
-        {
+        {/* {
           (user.username === 'admin') || (user.role.menus.indexOf('spare-part-all-pass') !== -1) ? (
             <Button 
               type='primary' 
@@ -199,13 +199,26 @@ class SparePartHome extends Component {
               <Icon type='plus'/>
               <span>批量通过</span>
             </Button>
-          ): (
-            <Button type='primary' style={{marginLeft: 10}} onClick={() => this.props.history.push('/spare-part/addupdate')}>
-              <Icon type='plus'/>
-              <span>申购</span>
-            </Button>
-          )
-        }
+          ): ( */}
+           <Button 
+            type='primary' 
+            style={{marginLeft: 10}} 
+            onClick={() => {
+              if(selectedRows.length > 0){
+                this.setState({isShowConfirm: true});
+              }else {
+                message.error('请选中至少一个备件');
+              }
+            }}>
+            <Icon type='plus'/>
+            <span>批量通过</span>
+          </Button>
+          <Button type='primary' style={{marginLeft: 10}} onClick={() => this.props.history.push('/spare-part/addupdate')}>
+            <Icon type='plus'/>
+            <span>申购</span>
+          </Button>
+          {/* )
+        } */}
       </span>
     );
 
@@ -237,7 +250,7 @@ class SparePartHome extends Component {
 
     return (
       <ConfigProvider locale={zhCN}>
-        <Card title={title} extra={extra}>
+        <Card title={title} extra={extra} style={{minHeight: '100%'}}>
           <Table
             bordered
             rowKey='_id'
