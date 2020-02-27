@@ -1,3 +1,4 @@
+// 用户权限配置
 const authList = [
   {
     title: '测量仪器',

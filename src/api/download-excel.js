@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// 下载excel模板
 export default function downloadExcel(url, data){
   return new Promise((resolve, reject) => {
     const promise = axios.get(url, {

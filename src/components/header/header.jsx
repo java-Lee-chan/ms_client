@@ -16,6 +16,7 @@ class Header extends Component {
     headTitle: PropTypes.string.isRequired,
   }
 
+  // 退出登录
   logout = () => {
     Modal.confirm({
       content: '确认退出吗',

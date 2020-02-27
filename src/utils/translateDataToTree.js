@@ -1,3 +1,4 @@
+// 将一个数组转换成一棵树
 export const translateDataToTree = (data) => {
   let parents = data.filter(value => value.father_id === undefined || value.father_id === null);
   let children = data.filter(value => value.father_id !== undefined && value.father_id !== null);

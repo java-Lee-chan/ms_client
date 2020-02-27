@@ -114,15 +114,21 @@ class SparePartAddUpdate extends Component {
     );
 
     const formItemLayout = {
-      labelCol: { span: 4 },
-      wrapperCol: { span: 16 }
+      labelCol: { 
+        md: {span: 6},
+        sm: {span: 8}
+      },
+      wrapperCol: { 
+        md: {span: 14},
+        sm: {span: 12}
+      }
     }
 
     return (
       <Card title={title}>
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
           <Row>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Item label='备件名称'>
                 {
                   getFieldDecorator('name', {
@@ -136,7 +142,7 @@ class SparePartAddUpdate extends Component {
                 }
               </Item>
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Item label='型号'>
                 {
                   getFieldDecorator('model', {
@@ -152,7 +158,7 @@ class SparePartAddUpdate extends Component {
             </Col>
           </Row>
           <Row>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Item label='规格'>
                 {
                   getFieldDecorator('specs', {
@@ -163,7 +169,7 @@ class SparePartAddUpdate extends Component {
                 }
               </Item>
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Item label='品牌'>
                 {
                   getFieldDecorator('brand', {
@@ -176,7 +182,7 @@ class SparePartAddUpdate extends Component {
             </Col>
           </Row>
           <Row>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Item label='单价'>
                 {
                   getFieldDecorator('price', {
@@ -190,7 +196,7 @@ class SparePartAddUpdate extends Component {
                 }
               </Item>
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Item label='数量'>
                 {
                   getFieldDecorator('num', {
@@ -206,7 +212,7 @@ class SparePartAddUpdate extends Component {
             </Col>
           </Row>
           <Row>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Item label='单位'>
                 {
                   getFieldDecorator('unit', {
@@ -217,7 +223,7 @@ class SparePartAddUpdate extends Component {
                 }
               </Item>
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Item label='总价'>
                 {
                   getFieldDecorator('total', {
@@ -230,7 +236,7 @@ class SparePartAddUpdate extends Component {
             </Col>
           </Row>
           <Row>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Item label='用途'>
                 {
                   getFieldDecorator('usage', {

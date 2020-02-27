@@ -182,7 +182,7 @@ export default class MeasureUpload extends Component {
       </span>
     );
     return (
-      <Card title={title}>
+      <Card title={title} style={{minHeight: '100%'}}>
         {
           dataSource.length>0? (
             <>
@@ -193,15 +193,15 @@ export default class MeasureUpload extends Component {
                 columns={this.columns}
                 size="small"
                 pagination={{hideOnSinglePage: true, defaultPageSize: 500}}
-              />
+              /><br/>
               <Button type='primary' onClick={this.handleUpload}>确认无误，点击上传</Button>&nbsp;&nbsp;
               <Button type='primary' onClick={this.handleCancel}>撤销</Button>
             </>
           ):(
             <>
-              <span>请根据模板文件的格式进行上传</span>
-              <LinkButton onClick={this.handleExport}>下载模板</LinkButton><br/>
-              <Input type="file" onChange={this.handleChange} style={{width: 500}}/>
+              <span  style={{fontWeight: 'bold'}}>请根据模板文件的格式进行上传</span>
+              <LinkButton onClick={this.handleExport}>下载模板</LinkButton><br/><br/>
+              <Input type="file" onChange={this.handleChange}/>
             </>
           )
         }

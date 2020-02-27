@@ -1,5 +1,6 @@
 import {reqDownloadTemplate} from '../api';
 
+// 请求下载excel模板文件
 export default async function(type) {
   const result = await reqDownloadTemplate(type);
   let blob = new Blob([result], {type: 'application/vnd.ms-excel;charset=utf8'});

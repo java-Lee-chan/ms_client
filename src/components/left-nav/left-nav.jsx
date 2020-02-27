@@ -20,6 +20,7 @@ class LeftNav extends Component {
     collapsed: PropTypes.bool.isRequired
   }
 
+  // 根据导航的配置文件配置导航
   getMenuNodes = (menuList) => {
     const path = this.props.location.pathname;
     

@@ -1,3 +1,4 @@
+// 导航配置
 const menuList = [
   {
     title: '首页',

@@ -135,8 +135,14 @@ class MeasureAddUpdateAndDetail extends Component{
     const next_time_placeholder = (isUpdate && measure.duration === '长期') || (isDetail && measureDetail.duration === '长期') || this.props.form.getFieldValue('duration') === '长期' ?'-' : '请选择日期';
     
     const formItemLayout = {
-      labelCol: { span: 4 },
-      wrapperCol: { span: 16 }
+      labelCol: { 
+        md: {span: 6},
+        sm: {span: 8}
+      },
+      wrapperCol: { 
+        md: {span: 14},
+        sm: {span: 12}
+      }
     };
 
     const title = (
@@ -162,7 +168,7 @@ class MeasureAddUpdateAndDetail extends Component{
             onSubmit={this.handleSubmit}
           >
             <Row>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='计量编号:'>
                   {
                     getFieldDecorator("_id", {
@@ -177,7 +183,7 @@ class MeasureAddUpdateAndDetail extends Component{
                   }
                 </Item>
               </Col>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='器具名称:'>
                   {
                     getFieldDecorator("name", {
@@ -193,7 +199,7 @@ class MeasureAddUpdateAndDetail extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='规格型号:'>
                   {
                     getFieldDecorator('model', {
@@ -204,7 +210,7 @@ class MeasureAddUpdateAndDetail extends Component{
                   }
                 </Item>
               </Col>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='出厂编号:'>
                   {
                     getFieldDecorator('factory_num', {
@@ -217,7 +223,7 @@ class MeasureAddUpdateAndDetail extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='制造商:'>
                   {
                     getFieldDecorator('manufacturer', {
@@ -228,7 +234,7 @@ class MeasureAddUpdateAndDetail extends Component{
                   }
                 </Item>
               </Col>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='检定日期:'>
                   {
                     getFieldDecorator('last_time', {
@@ -242,7 +248,7 @@ class MeasureAddUpdateAndDetail extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='检定周期:'>
                   {
                     getFieldDecorator('duration', {
@@ -258,7 +264,7 @@ class MeasureAddUpdateAndDetail extends Component{
                   }
                 </Item>
               </Col>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='有效期至:'>
                   {
                     getFieldDecorator('next_time', {
@@ -269,7 +275,7 @@ class MeasureAddUpdateAndDetail extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='ABC管理:'>
                   {
                     getFieldDecorator('abc',{
@@ -284,7 +290,7 @@ class MeasureAddUpdateAndDetail extends Component{
                   }
                 </Item>
               </Col>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='检定结果:'>
                   {
                     getFieldDecorator('result', {
@@ -300,7 +306,7 @@ class MeasureAddUpdateAndDetail extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='使用地点:'>
                   {
                     getFieldDecorator('location', {
@@ -320,7 +326,7 @@ class MeasureAddUpdateAndDetail extends Component{
                   }
                 </Item>
               </Col>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='用途:'>
                   {
                     getFieldDecorator('usage', {
@@ -333,7 +339,7 @@ class MeasureAddUpdateAndDetail extends Component{
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='送检类型:'>
                   {
                     getFieldDecorator('type', {
@@ -350,7 +356,7 @@ class MeasureAddUpdateAndDetail extends Component{
                   }
                 </Item>
               </Col>
-              <Col span={12}>
+              <Col md={12} sm={24}>
                 <Item label='状态:'>
                   {
                     getFieldDecorator('status', {

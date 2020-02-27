@@ -9,6 +9,10 @@ import {
   message
 } from 'antd';
 
+// import { connect } from 'react-redux';
+
+// import {asyncGetMeterLevels, asyncAddMeterLevels, asyncUpdateMeterLevels, asyncDeleteMeterLevels} from '../../redux/actions';
+
 import {reqGetMeterLevel, reqAddMeterLevel, reqUpdateMeterLevel, reqDeleteMeterLevel} from '../../api';
 import LinkButton from '../../components/link-button/link-button';
 import { translateDataToTree } from '../../utils/translateDataToTree';
@@ -89,16 +93,9 @@ export default class Settings extends Component {
 
   // 异步获取所有类型的表层级
   getMeterLevel = async() => {
+    // const {rawMeterLevels} = this.props;
     const result = await reqGetMeterLevel();
     if(result.status === 0){
-      // const meterLevels = result.data.reduce((pre, meterLevel) => {
-      //   if (Object.keys(pre).indexOf(meterLevel.type) === -1){
-      //     pre[meterLevel.type] = [meterLevel];
-      //   }else {
-      //     pre[meterLevel.type].push(meterLevel);
-      //   }
-      //   return pre;
-      // }, {});
       const meterLevels = translateDataToTree(result.data).reduce((pre, item) => {
         pre[item.type] = [item];
         return pre;
@@ -115,43 +112,10 @@ export default class Settings extends Component {
         meterLevels, 
         expandedRowKeys
       });
-
-      // this.getTypeMeterList();
     }else {
       message.error(result.msg, 1);
     }
   }
-
-  // // 根据表类型筛选出该界面的表层级
-  // getTypeMeterList = () => {
-  //   const {meterLevels} = this.state;
-  //   const newMeterLevels = {};
-  //   Object.keys(meterLevels).forEach(key => {
-  //     const index = meterLevels[key].findIndex(meterLevel => meterLevel.parent_id === undefined);
-  //     let meterList = meterLevels[key].splice(index, 1);
-  //     meterLevels[key].forEach(meterLevel => {
-  //       meterList = this.setMeterList(meterList, meterLevel);
-  //     });
-  //     newMeterLevels[key] = meterList;
-  //   })
-  //   this.setState({meterLevels: newMeterLevels});
-  // }
-
-  // setMeterList = (meterList, meterLevel) => {
-  //   return meterList.reduce((pre, meter) => {
-  //     if(meter._id === meterLevel.father_id){
-  //       if(meter.children){
-  //         meter.children.push(meterLevel);
-  //       }else {
-  //         meter.children = [meterLevel];
-  //       }
-  //     }else if(meter.children){
-  //       this.setMeterList(meter.children, meterLevel);
-  //     }
-  //     pre.push(meter);
-  //     return pre;
-  //   }, []);
-  // }
 
   handleMethod = (record, method) => {
     this.setState({isShow: true});
@@ -160,7 +124,7 @@ export default class Settings extends Component {
   }
 
   handleSubmit = () => {
-    this.form.validateFields(async (err, values) => {
+    this.form.validateFields(async(err, values) => {
       if(!err) {
         const newMeter = values;
         let result = null;
@@ -208,6 +172,7 @@ export default class Settings extends Component {
 
   componentDidMount() {
     this.type = this.props.location.pathname.split('/').pop();
+    // this.props.asyncGetMeterLevels();
     this.getMeterLevel();
     this.meters = [
       {
@@ -352,3 +317,8 @@ export default class Settings extends Component {
     )
   }
 }
+
+// export default connect(
+//   state => ({rawMeterLevels: state.meterLevels}),
+//   {asyncGetMeterLevels, asyncAddMeterLevels, asyncUpdateMeterLevels, asyncDeleteMeterLevels}
+// )(Settings);

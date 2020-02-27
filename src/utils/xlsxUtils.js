@@ -1,8 +1,8 @@
 import XLSX from 'xlsx';
 
 
-// 读取本地excel文件
 export default {
+  // 读取本地excel文件
   readWorkbookFromLocalFile(file, callback) {
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -12,6 +12,7 @@ export default {
     };
     reader.readAsBinaryString(file);
   },
+  // 将从服务器获取的内容转换为excel文件
   exportWorkbookFromServerFile(results, type){
     const worksheet= XLSX.utils.json_to_sheet(results);
     const workbook = XLSX.utils.book_new();

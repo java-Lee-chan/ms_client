@@ -12,7 +12,7 @@ export default class EnergySettings extends Component {
   render() {
 
     return (
-      <>
+      <div>
         <Menu mode="horizontal">
           <Menu.Item key="gas">
             <Link to='/energy/settings/gas'>
@@ -38,8 +38,7 @@ export default class EnergySettings extends Component {
             <Redirect to='/energy/settings/gas'/>
           </Switch>
         </div>
-      </>
-      
+      </div> 
     )
   }
 }
