@@ -19,7 +19,7 @@ class RoleContent extends Component {
   constructor(props) {
     super(props);
 
-    const {menus} = props.role;
+    const {menus} = props.role || [];
     this.state = {menus};
   }
 
@@ -68,7 +68,7 @@ class RoleContent extends Component {
 
   handleChange = async (checkedList, key) => {
     this.setState(state => {
-      const newMenus = state.menus.filter(menu => menu.indexOf(key) !== 0);
+      const newMenus = state.menus ? state.menus.filter(menu => menu.indexOf(key) !== 0) : [];
       return {
         menus: [...newMenus, ...checkedList]
       }

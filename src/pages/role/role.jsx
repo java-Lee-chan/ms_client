@@ -27,7 +27,7 @@ export default class Role extends Component {
     const result = await reqGetRoles();
     if(result.status === 0){
       const roles = result.data;
-      this.setState({roles, role: roles[0]});
+      this.setState({roles, role: roles[0] || {}});
     }else {
       message.error(result.msg, 1);
     }
@@ -41,11 +41,10 @@ export default class Role extends Component {
         const result = await reqAddRole(roleName);
         if(result.status === 0){
           message.success('添加角色成功', 1);
-          const role = result.data;
           this.setState(state => ({
-            isShowAdd: false,
-            roles: [...state.roles, role]
+            isShowAdd: false
           }));
+          this.getRoles();
         }else {
           message.error(result.msg, 1);
         }
