@@ -284,7 +284,7 @@ export default class MeasureHome extends Component {
     
     const title = (
       <InputGroup compact>
-        <Select defaultValue="name" onChange={searchOption => this.setState({searchOption})}>
+        <Select defaultValue="name" onChange={searchOption => this.setState({searchOption, searchMeasures: this.state.measures})}>
           <Option value="name">器具名称</Option>
           <Option value="_id">计量编号</Option>
           <Option value="next_time">有效期至</Option>
