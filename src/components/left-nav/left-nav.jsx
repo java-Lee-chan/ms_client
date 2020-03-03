@@ -65,9 +65,12 @@ class LeftNav extends Component {
 
   render() {
     let path = this.props.location.pathname;
-    // if(path.indexOf('/measure') === 0){
-    //   path = '/measure';
-    // }
+    if(path.indexOf('/measure') === 0){
+      path = '/measure';
+    }
+    if(path.indexOf('/spare-part') === 0){
+      path = '/spare-part';
+    }
     if(path.indexOf('/energy/settings') === 0){
       path = '/energy/settings';
     }

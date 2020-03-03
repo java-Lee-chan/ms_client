@@ -39,7 +39,7 @@ class RoleContent extends Component {
         pre.push(checkbox);
         return pre;
       }, []);
-      const defaultValue = menus.filter(menu => menu.indexOf(auth.key) === 0);
+      const defaultValue = (menus && menus.length > 0) ? menus.filter(menu => menu.indexOf(auth.key) === 0) : [];
       return (
         <Card 
           type='inner' 
