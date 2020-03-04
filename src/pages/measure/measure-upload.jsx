@@ -201,7 +201,7 @@ export default class MeasureUpload extends Component {
             <>
               <span  style={{fontWeight: 'bold'}}>请根据模板文件的格式进行上传</span>
               <LinkButton onClick={this.handleExport}>下载模板</LinkButton><br/><br/>
-              <Input type="file" onChange={this.handleChange}/>
+              <Input type="file" onChange={this.handleChange} accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
             </>
           )
         }
