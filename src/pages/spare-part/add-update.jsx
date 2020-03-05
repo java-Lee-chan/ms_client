@@ -191,7 +191,7 @@ class SparePartAddUpdate extends Component {
                       {required: true, message: '请输入备件单价'},
                     ]
                   })(
-                    <InputNumber min={0} onChange={(value) => {this.handleChange(value, 'price')}}/>
+                    <InputNumber min={0} onChange={(value) => {this.handleChange(value, 'price')}} style={{width: '100%'}}/>
                   )
                 }
               </Item>
@@ -205,7 +205,7 @@ class SparePartAddUpdate extends Component {
                       {required: true, message: '请输入采购数量'},
                     ]
                   })(
-                    <InputNumber min={0} onChange={(value) => {this.handleChange(value, 'num')}}/>
+                    <InputNumber min={0} onChange={(value) => {this.handleChange(value, 'num')}} style={{width: '100%'}}/>
                   )
                 }
               </Item>
@@ -229,7 +229,7 @@ class SparePartAddUpdate extends Component {
                   getFieldDecorator('total', {
                     initialValue: isUpdate? sparePart.total: 0,
                   })(
-                    <InputNumber disabled/>
+                    <InputNumber disabled style={{width: '100%'}}/>
                   )
                 }
               </Item>

@@ -242,7 +242,7 @@ class MeasureAddUpdateAndDetail extends Component{
                       rules: [
                         {required: true, message: '请选择上次检定时间!' }
                       ]
-                    })(<DatePicker onChange={this.handleLastTimeChange} disabled={isDetail}/>)
+                    })(<DatePicker onChange={this.handleLastTimeChange} disabled={isDetail} style={{width: '100%'}}/>)
                   }
                 </Item>
               </Col>
@@ -269,7 +269,7 @@ class MeasureAddUpdateAndDetail extends Component{
                   {
                     getFieldDecorator('next_time', {
                       initialValue: next_time_initial,
-                    })(<DatePicker disabled placeholder={next_time_placeholder}/>)
+                    })(<DatePicker disabled placeholder={next_time_placeholder} style={{width: '100%'}}/>)
                   }
                 </Item>
               </Col>

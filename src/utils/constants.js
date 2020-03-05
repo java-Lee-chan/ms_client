@@ -29,4 +29,5 @@ export const sparePartConstants = {
   usage: '用途',
   time: '提交日期',
   committer: '提交人',
+  status: '状态'
 }
