@@ -109,7 +109,7 @@ class SparePartAddUpdate extends Component {
         }}>
           <Icon type='arrow-left'/>
         </LinkButton>
-        <span>{'申购备件'}</span>
+        <span>{isUpdate ? '编辑备件' : '申购备件'}</span>
       </span>
     );
 
