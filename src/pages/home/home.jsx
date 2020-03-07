@@ -22,7 +22,8 @@ export default class Home extends Component {
     waterDateList: [],
     waterValueList: [],
     time: '',
-    dataSource: []
+    dataSource: [],
+    timeLines: []
   }
 
   initColumns = () => {
@@ -101,6 +102,7 @@ export default class Home extends Component {
         height: 100
       },
       xAxis: [{
+        name: '位置',
         data: dateList
       }],
       yAxis: [{
@@ -134,9 +136,11 @@ export default class Home extends Component {
         height: 100
       },
       xAxis: [{
+        name: '位置',
         data: dateList
       }],
       yAxis: [{
+        name: '用量 单位',
         splitLine: {show: false}
       }],
       series: [{
@@ -170,21 +174,26 @@ export default class Home extends Component {
     const result = await reqSparePartTime();
     if(result.status === 0){
       const timeLines = result.data;
-      const lastTimeLines = timeLines.reduce((pre, item) => {
-        if(pre[item.committer]){
-          pre[item.committer] = pre[item.committer].time > item.time? pre[item.committer] : {time: item.time, _id: item._id};
-        }else {
-          pre[item.committer] = {time: item.time, _id: item._id};
-        }
-        return pre;
-      }, {});
-      // console.log(lastTimeLines);
-      this.timeLineList = Object.keys(lastTimeLines).map(committer => (
-        <Timeline.Item key={lastTimeLines[committer]._id}>{`${committer}在${lastTimeLines[committer].time}最后一次提交申购`}</Timeline.Item>
-      ))
+      this.setState({ timeLines });
     }else {
       message.error('获取备件提交时间失败', 1); 
     }
+  }
+
+  getTimeLineList = () => {
+    const { timeLines } = this.state;
+    let lastTimeLines = {};
+    timeLines.forEach((item) => {
+      if(lastTimeLines[item.committer]){
+        lastTimeLines[item.committer] = lastTimeLines[item.committer].time > item.time? lastTimeLines[item.committer] : {time: item.time, _id: item._id};
+      }else {
+        lastTimeLines[item.committer] = {time: item.time, _id: item._id};
+      }
+    });
+    const timeLineList = Object.keys(lastTimeLines).map(committer => (
+      <Timeline.Item key={lastTimeLines[committer]._id}>{`${committer}在${lastTimeLines[committer].time}最后一次提交申购`}</Timeline.Item>
+    ));
+    return timeLineList
   }
 
   UNSAFE_componentWillMount() {
@@ -268,7 +277,7 @@ export default class Home extends Component {
             <Card title='本月备件提交情况' style={{height: '100%'}}>
               <Timeline>
                 {
-                  this.timeLineList
+                  this.getTimeLineList()
                 }
               </Timeline>
             </Card>
