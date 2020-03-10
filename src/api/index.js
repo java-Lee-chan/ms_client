@@ -1,6 +1,8 @@
 import ajax from './ajax';
-
+import jsonp from 'jsonp';
 import downloadExcel from './download-excel';
+
+import { message } from 'antd';
 
 const BASE = '';
 
@@ -66,6 +68,29 @@ export const reqAddOrUpdate = (user) => ajax(BASE + `/manage/user/${user._id? 'u
 
 // 删除用户
 export const reqDeleteUser = (userId) => ajax(BASE + '/manage/user/delete', {userId}, 'POST');
+
+/* 
+jsonp请求的接口请求函数 
+`http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`
+*/
+export const reqWeather = (city) => {
+  return new Promise((resolve, reject) => {
+    const url = `http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`;
+    // 发送jsonp请求
+    jsonp(url, {}, (err, data) => {
+      // console.log(err, data);
+      // 如果成功
+      if(!err && data.status === 'success'){
+        // 取出需要的数据
+        const {dayPictureUrl, weather} = data.results[0].weather_data[0]
+        resolve({dayPictureUrl, weather});
+      }else {
+        // 如果失败
+        message.error('获取天气信息失败');
+      }
+    })
+  })
+}
 
 // 获取能源表层级
 export const reqGetMeterLevel = () => ajax(BASE + '/manage/meter-level/list');
